@@ -128,3 +128,6 @@ def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num
     list_of_ids_repeated = list_of_ids_repeated + id_repeated
   return list_of_ids_repeated
 
+def generate_house_for_person(person_index_df, house_index_df):
+  list_of_ids_repeated = generate_list_of_repeated_house_ids(house_index_df)
+  return person_index_df
