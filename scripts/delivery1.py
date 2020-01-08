@@ -6,8 +6,9 @@ import random
 random.seed(a=42)
 
 from faker import Faker
-Faker.seed(42)
+#Faker.seed(42)
 fake = Faker('en_UK')
+fake.seed(42)
 
 
 #############
