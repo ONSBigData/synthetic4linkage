@@ -76,17 +76,14 @@ def create_row_house(code_list, num=1):
               'Any_Relationships_CCS':None} for x in range(num)]
   return output
 
-def create_row_CE():
+def create_row_CE(code_list, num=1):
   output = [{'CE_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
-              'Household_Address': None,
-              'Household_Address_Postcode': None,
-              'Household_OA': None,
-              'Household_UPRN': None,
-              'Accomodation_Type':None,
-              'Number_Of_Usual_Residents':None,
-              'Ownership_Type':None,
-              'From_Dummy':None,
-              'Any_Relationships_CCS':None} for x in range(num)]
+              'CE_Address': None,
+              'CE_Address_Postcode': None,
+              'CE_OA': None,
+              'CE_UPRN': None,
+              'Nature_Of_Establishment':None,
+              'Number_Of_Residents':None} for x in range(num)]
   return output
 
 
