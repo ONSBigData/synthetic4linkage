@@ -6,15 +6,15 @@ import random
 random.seed(a=42)
 
 from faker import Faker
-#Faker.seed(42)
+Faker.seed(42)
 fake = Faker('en_UK')
-fake.seed(42) # please toggle depending on Faker version
+
 
 #############
 # generate data row by row
 #############
 
-def create_row(code_list, num=1):
+def create_row(num=1):
     output = [{"Resident_ID": random.sample(range(10**18, ((10**19)-1)),1)[0],
               'Household_ID': None,
               'CE_ID': None,
@@ -59,6 +59,8 @@ def create_row(code_list, num=1):
     return output
 
 
+person_index_df = pd.DataFrame(create_row(num=10))
+
 ############
 # date of birth from object
 ############
@@ -67,11 +69,22 @@ def calculate_age_on_31_12_2019(born):
     today = datetime.date(2019, 12, 31)
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
+person_index_df['Resident_Day_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.day)
+person_index_df['Resident_Month_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.month)
+person_index_df['Resident_Year_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.year)
+person_index_df['Resident_Age'] = person_index_df['date_time_obj'].apply(calculate_age_on_31_12_2019)
+person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
+person_index_df = person_index_df.drop('date_time_obj', axis = 1)
 
-def split_DOB(person_index_df):
-    person_index_df['Resident_Day_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.day)
-    person_index_df['Resident_Month_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.month)
-    person_index_df['Resident_Year_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.year)
-    person_index_df['Resident_Age'] = person_index_df['date_time_obj'].apply(calculate_age_on_31_12_2019)
-    person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
-    return person_index_df
+
+#######
+### CHECK
+#######
+
+print(person_index_df.head())
+
+#####
+# Save file 
+#####
+
+person_index_df.to_csv('../output/person_index.csv')
