@@ -13,12 +13,12 @@ person_index_df = d.split_DOB(person_index_df)
 ###
 # House_index
 ###
-house_index_df = pd.DataFrame(d.create_row_house(num=50, code_list =  code_list))
+house_index_df = pd.DataFrame(d.create_row_house(num=500, code_list =  code_list))
 
 ###
 # CE_index
 ###
-ce_index_df = pd.DataFrame(d.create_row_CE(num=5, code_list =  code_list))
+ce_index_df = pd.DataFrame(d.create_row_CE(num=50, code_list =  code_list))
 
 
 #######
@@ -29,12 +29,13 @@ ce_index_df = pd.DataFrame(d.create_row_CE(num=5, code_list =  code_list))
 ### Put people in houses 
 ########
 
-#person_index_df = d.generate_house_for_person(person_index_df, house_index_df)
+person_index_df = d.generate_house_for_person(person_index_df, house_index_df)
 ######
 
 
 print(person_index_df.head())
-print(house_index_df['Number_Of_Usual_Residents'].head())
+print(person_index_df.tail())
+#print(house_index_df['Number_Of_Usual_Residents'].head())
 
 #####
 # Save file
