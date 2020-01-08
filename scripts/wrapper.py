@@ -25,7 +25,7 @@ ce_index_df = pd.DataFrame(d.create_row_CE(num=10, code_list =  code_list))
 ### CHECK
 #######
 
-print(person_index_df.head())
+print(person_index_df['Country_Of_Birth'].head())
 print(house_index_df.head())
 
 #####
@@ -33,5 +33,5 @@ print(house_index_df.head())
 #####
 
 person_index_df.to_csv('../output/person_index.csv')
-#house_index_df.to_csv('../output/house_index.csv')
-#ce_index_df.to_csv('../output/ce_index.csv')
+house_index_df.to_csv('../output/house_index.csv')
+ce_index_df.to_csv('../output/ce_index.csv')

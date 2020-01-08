@@ -27,7 +27,7 @@ def create_row_resident(code_list, num=1):
               'Last_Name': fake.last_name(),
               'date_time_obj': fake.date_between_dates(date_start=datetime.date(1904, 1, 1),
                                                        date_end=datetime.date(2019, 12, 31)),
-              'Country_Of_Birth': country_codes[random.randint(0,len(country_codes))],
+              'Country_Of_Birth': int(country_codes[random.randint(0,len(country_codes))]),
               'Country_Of_Birth_UK':None,
               'Sex':None,
               'Marital_Status':None,
