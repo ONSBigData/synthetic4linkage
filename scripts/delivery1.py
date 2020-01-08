@@ -6,15 +6,16 @@ import random
 random.seed(a=42)
 
 from faker import Faker
+Faker.seed(42)
 fake = Faker('en_UK')
-fake.seed(42)
+
 
 #############
 # generate data row by row
 #############
 
 def create_row(num=1):
-    output = [{"Resident_ID": random.sample(range(10**18, ((10**19)-1)),1),
+    output = [{"Resident_ID": random.sample(range(10**18, ((10**19)-1)),1)[0],
               'Household_ID': None,
               'CE_ID': None,
               'First_Name': fake.first_name(),
@@ -60,7 +61,7 @@ def create_row(num=1):
 
 person_index_df = pd.DataFrame(create_row(num=10))
 
-person_index_df.head()
+print(person_index_df.head())
 
 ############
 # date of birth from object
@@ -75,3 +76,6 @@ person_index_df['Resident_Month_Of_Birth'] = person_index_df['date_time_obj'].ap
 person_index_df['Resident_Year_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.year)
 person_index_df['Resident_Age'] = person_index_df['date_time_obj'].apply(calculate_age_on_31_12_2019)
 person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
+person_index_df = person_index_df.drop('date_time_obj', axis = 1)
+
+print(person_index_df.head())
