@@ -66,24 +66,24 @@ def create_row_resident(code_list, num=1):
 def create_row_house(code_list, num=1):
   output = [{'Household_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
               'Household_Address': fake.building_number(),
-              'Household_Address_Postcode': None,
+              'Household_Address_Postcode': fake.postcode(),
               'Household_OA': None,
-              'Household_UPRN': None,
-              'Accomodation_Type':None,
+              'Household_UPRN': random.randint(0,((10**12)-1)),
+              'Accomodation_Type':random.choice([1, 2, 3, 4, 5, 6, 7, -9, -7, -3]),
               'Number_Of_Usual_Residents':random.randint(1,5),
-              'Ownership_Type':None,
+              'Ownership_Type':random.choice([1, 2, 3, 4, 5, -9, -7]),
               'From_Dummy':None,
               'Any_Relationships_CCS':None} for x in range(num)]
   return output
 
 def create_row_CE(code_list, num=1):
   output = [{'CE_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
-              'CE_Address': None,#fake.building_number(),
-              'CE_Address_Postcode': None,
+              'CE_Address': fake.building_number(),
+              'CE_Address_Postcode': fake.postcode(),
               'CE_OA': None,
-              'CE_UPRN': None,
-              'Nature_Of_Establishment':None,
-              'Number_Of_Residents':random.randint(6,49)} for x in range(num)]
+              'CE_UPRN': random.randint(0,((10**12)-1)),
+              'Nature_Of_Establishment': random.choice(list(range(1,23))+[-9, -7]),
+              'Number_Of_Residents': random.randint(6,49)} for x in range(num)]
   return output
 
 
@@ -104,3 +104,17 @@ def split_DOB(person_index_df):
     person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
     person_index_df = person_index_df.drop('date_time_obj', axis = 1)
     return person_index_df
+
+
+
+#########
+## Asigning houses to people 
+##########
+
+# assign house id to resident id randomly 
+# unless the house id has been used more than 
+# the number of times in total number of usual residents 
+
+
+# create a list of random house ids where the number of times the ID apears 
+# is less than or equal to the number of residents
