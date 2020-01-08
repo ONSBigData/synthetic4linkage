@@ -1,11 +1,11 @@
 ,Resident_ID,Household_ID,CE_ID,First_Name,Middle_Name,Last_Name,Country_Of_Birth,Country_Of_Birth_UK,Sex,Marital_Status,Marital_Status_CCS,Residence_Type,Ethnic Group (five category),Ethnicity: Tick Box,Alternative_Address_Type,Alternative_Address_Indicator,Alternative_Address,Alternative_Address_Postcode,Alternative_Address_Country,Alternative_Address_OA,Alternative_Address_UPRN,1_Year_Ago_Address_Type,1_Year_Ago_Address,1_Year_Ago_Address_Postcode,1_Year_Ago_Address_Country,1_Year_Ago_Address_OA,1_Year_Ago_Address_UPRN,Workplace_Type,Workplace_Address,Workplace_Address_Postcode,Workplace_Address_Country,Workplace_Address_UPRN,Activity Last Week,In_Full_Time_Education,Is_HH_Term_Time_Address,Armed Forces Indicator,SIC,SOC,Census Return Method,Resident_Day_Of_Birth,Resident_Month_Of_Birth,Resident_Year_Of_Birth,Resident_Age,full_DOB
-0,2026847926404610461,,,Sandra,,Jennings,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,6,6,1941,78,06061941
-1,7839596180442651345,,,Clive,,Davidson,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,13,12,1917,102,13121917
-2,3258728696626565719,,,Hayley,,Norman,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,31,10,1915,104,31101915
-3,2287010195568088798,,,Samantha,,Higgins,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1,10,1916,103,01101916
-4,1945351111358374057,,,Dean,,Lowe,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,12,8,1907,112,12081907
-5,7831454145019129197,,,Tracey,,Edwards,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,14,6,1999,20,14061999
-6,6030118478018109776,,,Charlotte,,Quinn,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,13,3,1984,35,13031984
-7,6446332115853614978,,,Joe,,Taylor,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,4,2007,12,10042007
-8,1293143515607798169,,,Marion,,Harrison,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,22,4,1950,69,22041950
-9,1864186096263678574,,,Joe,,Stevens,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,29,11,2007,12,29112007
+0,2026847926404610461,,,Sandra,,Jennings,250.0,,,,,,,,,,,,422.0,,,,,,508.0,,,,,,72.0,,,,,,6400.0,2137,,6,6,1941,78,06061941
+1,7831454145019129197,,,Clive,,Davidson,470.0,,,,,,,,,,,,52.0,,,,,,912.0,,,,,,620.0,,,,,,3800.0,3115,,13,12,1917,102,13121917
+2,5661079826957838872,,,Hayley,,Norman,276.0,,,,,,,,,,,,430.0,,,,,,533.0,,,,,,710.0,,,,,,2890.0,8114,,31,10,1915,104,31101915
+3,8465678202832650640,,,Samantha,,Higgins,924.0,,,,,,,,,,,,736.0,,,,,,52.0,,,,,,702.0,,,,,,1810.0,2319,,1,10,1916,103,01101916
+4,9828732236256693627,,,Dean,,Lowe,418.0,,,,,,,,,,,,112.0,,,,,,792.0,,,,,,484.0,,,,,,3900.0,4134,,12,8,1907,112,12081907
+5,4172431589140685843,,,Tracey,,Edwards,48.0,,,,,,,,,,,,208.0,,,,,,850.0,,,,,,926.0,,,,,,5300.0,4214,,14,6,1999,20,14061999
+6,6091676136244264936,,,Charlotte,,Quinn,344.0,,,,,,,,,,,,304.0,,,,,,324.0,,,,,,642.0,,,,,,800.0,8234,,13,3,1984,35,13031984
+7,8130296919575202446,,,Joe,,Taylor,887.0,,,,,,,,,,,,971.0,,,,,,231.0,,,,,,31.0,,,,,,2610.0,3422,,10,4,2007,12,10042007
+8,6863154102184358547,,,Marion,,Harrison,985.0,,,,,,,,,,,,732.0,,,,,,986.0,,,,,,860.0,,,,,,9600.0,9120,,22,4,1950,69,22041950
+9,7473149855255013509,,,Joe,,Stevens,100.0,,,,,,,,,,,,204.0,,,,,,992.0,,,,,,508.0,,,,,,7500.0,5411,,29,11,2007,12,29112007

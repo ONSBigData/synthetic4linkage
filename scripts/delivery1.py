@@ -14,8 +14,12 @@ fake = Faker('en_UK')
 # generate data row by row
 #############
 
+
 def create_row_resident(code_list, num=1):
-    output = [{"Resident_ID": random.sample(range(10**18, ((10**19)-1)),1)[0],
+  country_codes = code_list.iloc[:, 0].dropna()
+  soc_codes = code_list.iloc[:, 1].dropna()
+  sic_codes = code_list.iloc[:, 2].dropna()
+  output = [{"Resident_ID": random.sample(range(10**18, ((10**19)-1)),1)[0],
               'Household_ID': None,
               'CE_ID': None,
               'First_Name': fake.first_name(),
@@ -23,7 +27,7 @@ def create_row_resident(code_list, num=1):
               'Last_Name': fake.last_name(),
               'date_time_obj': fake.date_between_dates(date_start=datetime.date(1904, 1, 1),
                                                        date_end=datetime.date(2019, 12, 31)),
-              'Country_Of_Birth':None,
+              'Country_Of_Birth': country_codes[random.randint(0,len(country_codes))],
               'Country_Of_Birth_UK':None,
               'Sex':None,
               'Marital_Status':None,
@@ -35,28 +39,28 @@ def create_row_resident(code_list, num=1):
               'Alternative_Address_Indicator':None,
               'Alternative_Address':None,
               'Alternative_Address_Postcode':None,
-              'Alternative_Address_Country':None,
+              'Alternative_Address_Country': country_codes[random.randint(0,len(country_codes))],
               'Alternative_Address_OA':None,
               'Alternative_Address_UPRN':None,
               '1_Year_Ago_Address_Type':None,
               '1_Year_Ago_Address':None,
               '1_Year_Ago_Address_Postcode':None,
-              '1_Year_Ago_Address_Country':None,
+              '1_Year_Ago_Address_Country': country_codes[random.randint(0,len(country_codes))],
               '1_Year_Ago_Address_OA':None,
               '1_Year_Ago_Address_UPRN':None,
               'Workplace_Type':None,
               'Workplace_Address':None,
               'Workplace_Address_Postcode':None,
-              'Workplace_Address_Country':None,
+              'Workplace_Address_Country': country_codes[random.randint(0,len(country_codes))],
               'Workplace_Address_UPRN':None,
               'Activity Last Week':None,
               'In_Full_Time_Education':None,
               'Is_HH_Term_Time_Address':None,
               'Armed Forces Indicator':None,
-              'SIC':None,
-              'SOC':None,
+              'SIC':  sic_codes[random.randint(0,len(sic_codes))],
+              'SOC':  soc_codes[random.randint(0,len(soc_codes))],
               'Census Return Method':None} for x in range(num)]
-    return output
+  return output
 
 
 def create_row_house(code_list, num=1):
@@ -73,7 +77,7 @@ def create_row_house(code_list, num=1):
   return output
 
 def create_row_CE():
-  output = [{'Household_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
+  output = [{'CE_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
               'Household_Address': None,
               'Household_Address_Postcode': None,
               'Household_OA': None,
