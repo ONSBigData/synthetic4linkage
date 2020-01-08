@@ -6,9 +6,9 @@ import random
 random.seed(a=42)
 
 from faker import Faker
-#Faker.seed(42)
+Faker.seed(42)
 fake = Faker('en_UK')
-fake.seed(42) # please toggle depending on Faker version
+#fake.seed(42) # please toggle depending on Faker version
 
 #############
 # generate data row by row
@@ -74,4 +74,5 @@ def split_DOB(person_index_df):
     person_index_df['Resident_Year_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.year)
     person_index_df['Resident_Age'] = person_index_df['date_time_obj'].apply(calculate_age_on_31_12_2019)
     person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
+    person_index_df = person_index_df.drop('date_time_obj', axis = 1)
     return person_index_df
