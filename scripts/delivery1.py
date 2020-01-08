@@ -104,3 +104,17 @@ def split_DOB(person_index_df):
     person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
     person_index_df = person_index_df.drop('date_time_obj', axis = 1)
     return person_index_df
+
+
+
+#########
+## Asigning houses to people 
+##########
+
+# assign house id to resident id randomly 
+# unless the house id has been used more than 
+# the number of times in total number of usual residents 
+
+
+# create a list of random house ids where the number of times the ID apears 
+# is less than or equal to the number of residents
