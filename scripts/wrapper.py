@@ -7,7 +7,7 @@ code_list = pd.read_csv('../data/possible_codes.csv')
 ###
 # Resident_index
 ###
-person_index_df = pd.DataFrame(d.create_row_resident(num=1000, code_list =  code_list))
+person_index_df = pd.DataFrame(d.create_row_resident(num=3000, code_list =  code_list))
 person_index_df = d.split_DOB(person_index_df)
 
 ###
@@ -29,13 +29,13 @@ ce_index_df = pd.DataFrame(d.create_row_CE(num=50, code_list =  code_list))
 ### Put people in houses 
 ########
 
-person_index_df = d.generate_house_for_person(person_index_df, house_index_df)
+person_index_df = d.generate_house_for_person(person_index_df, house_index_df, ce_index_df)
 ######
 
 
 print(person_index_df.head())
 print(person_index_df.tail())
-#print(house_index_df['Number_Of_Usual_Residents'].head())
+#print(ce_index_df.head())
 
 #####
 # Save file
@@ -48,7 +48,7 @@ ce_index_df.to_csv('../output/ce_index.csv')
 
 
 ########
-## Assigning houses to people 
+## Make a big table of everything 
 ########
 
 # Easy to asign house to a person and then join after 
