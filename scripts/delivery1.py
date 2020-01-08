@@ -61,8 +61,6 @@ def create_row(num=1):
 
 person_index_df = pd.DataFrame(create_row(num=10))
 
-print(person_index_df.head())
-
 ############
 # date of birth from object
 ############
@@ -78,4 +76,15 @@ person_index_df['Resident_Age'] = person_index_df['date_time_obj'].apply(calcula
 person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
 person_index_df = person_index_df.drop('date_time_obj', axis = 1)
 
+
+#######
+### CHECK
+#######
+
 print(person_index_df.head())
+
+#####
+# Save file 
+#####
+
+person_index_df.to_csv('../output/person_index.csv')
