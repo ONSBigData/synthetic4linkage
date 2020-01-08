@@ -14,7 +14,7 @@ fake = Faker('en_UK')
 # generate data row by row
 #############
 
-def create_row(code_list, num=1):
+def create_row_resident(code_list, num=1):
     output = [{"Resident_ID": random.sample(range(10**18, ((10**19)-1)),1)[0],
               'Household_ID': None,
               'CE_ID': None,
@@ -57,6 +57,24 @@ def create_row(code_list, num=1):
               'SOC':None,
               'Census Return Method':None} for x in range(num)]
     return output
+
+
+def create_row_house(code_list, num=1):
+  output = [{'Household_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
+              'Household_Address': None,
+              'Household_Address_Postcode': fake.first_name(),
+              'Household_OA': None,
+              'Household_UPRN': fake.last_name(),
+              'Accomodation_Type':None,
+              'Number_Of_Usual_Residents':None,
+              'Ownership_Type':None,
+              'From_Dummy':None,
+              'Any_Relationships_CCS':None} for x in range(num)]
+  return output
+
+def create_row_CE():
+  return output
+
 
 
 ############
