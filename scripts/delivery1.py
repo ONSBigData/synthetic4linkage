@@ -35,7 +35,7 @@ def create_row_resident(code_list, num=1):
               'Residence_Type':  random.choice([1,2]),
               'Ethnic Group (five category)': random.choice([1,2,3,4,5,-9]),
               'Ethnicity: Tick Box': random.choice([-9]+[x for x in range(1,20)]),
-              'Alternative_Address_Type':None,
+              'Alternative_Address_Type': ''.join([ str(random.choice([0,1])) for x in range(0,8)]),
               'Alternative_Address_Indicator': random.choice([1,2,3,-7,-9]),
               'Alternative_Address': fake.street_address()+', '+fake.city(),
               'Alternative_Address_Postcode': fake.postcode(),
