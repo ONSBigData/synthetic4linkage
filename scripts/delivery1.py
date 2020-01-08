@@ -19,7 +19,7 @@ def create_row_resident(code_list, num=1):
   country_codes = code_list.iloc[:, 0].dropna()
   soc_codes = code_list.iloc[:, 1].dropna()
   sic_codes = code_list.iloc[:, 2].dropna()
-  output = [{"Resident_ID": random.sample(range(10**18, ((10**19)-1)),1)[0],
+  output = [{"Resident_ID": random.randint(10**18, ((10**19)-1)),
               'Household_ID': None,
               'CE_ID': None,
               'First_Name': fake.first_name(),
@@ -27,44 +27,44 @@ def create_row_resident(code_list, num=1):
               'Last_Name': fake.last_name(),
               'date_time_obj': fake.date_between_dates(date_start=datetime.date(1904, 1, 1),
                                                        date_end=datetime.date(2019, 12, 31)),
-              'Country_Of_Birth': int(country_codes[random.randint(0,len(country_codes))]),
-              'Country_Of_Birth_UK':None,
-              'Sex':None,
-              'Marital_Status':None,
-              'Marital_Status_CCS':None,
-              'Residence_Type':None,
-              'Ethnic Group (five category)':None,
-              'Ethnicity: Tick Box':None,
+              'Country_Of_Birth': int(random.choice(country_codes)),
+              'Country_Of_Birth_UK': random.choice([1,2,-9,-7]),
+              'Sex': random.choice([1,2,-9,-7]),
+              'Marital_Status': random.choice([-9,-7]+[x for x in range(1,18)]),
+              'Marital_Status_CCS': random.choice([-9,-7]+[x for x in range(1,10)]),
+              'Residence_Type':  random.choice([1,2]),
+              'Ethnic Group (five category)': random.choice([1,2,3,4,5,-9]),
+              'Ethnicity: Tick Box': random.choice([-9]+[x for x in range(1,20)]),
               'Alternative_Address_Type':None,
-              'Alternative_Address_Indicator':None,
+              'Alternative_Address_Indicator': random.choice([1,2,3,-7,-9]),
               'Alternative_Address':None,
               'Alternative_Address_Postcode':None,
-              'Alternative_Address_Country': country_codes[random.randint(0,len(country_codes))],
+              'Alternative_Address_Country': int(random.choice(country_codes)),
               'Alternative_Address_OA':None,
               'Alternative_Address_UPRN':None,
-              '1_Year_Ago_Address_Type':None,
+              '1_Year_Ago_Address_Type':  random.choice([1,2,3,4,5,-7,-9]),
               '1_Year_Ago_Address':None,
               '1_Year_Ago_Address_Postcode':None,
-              '1_Year_Ago_Address_Country': country_codes[random.randint(0,len(country_codes))],
+              '1_Year_Ago_Address_Country': int(random.choice(country_codes)),
               '1_Year_Ago_Address_OA':None,
               '1_Year_Ago_Address_UPRN':None,
               'Workplace_Type':None,
               'Workplace_Address':None,
               'Workplace_Address_Postcode':None,
-              'Workplace_Address_Country': country_codes[random.randint(0,len(country_codes))],
+              'Workplace_Address_Country': int(random.choice(country_codes)),
               'Workplace_Address_UPRN':None,
-              'Activity Last Week':None,
-              'In_Full_Time_Education':None,
-              'Is_HH_Term_Time_Address':None,
-              'Armed Forces Indicator':None,
-              'SIC':  sic_codes[random.randint(0,len(sic_codes))],
-              'SOC':  soc_codes[random.randint(0,len(soc_codes))],
-              'Census Return Method':None} for x in range(num)]
+              'Activity Last Week':  random.choice([-9]+[x for x in range(1,8)]),
+              'In_Full_Time_Education': random.choice([1,2,-7,-9]),
+              'Is_HH_Term_Time_Address': random.choice([1,2,3,-7,-9]),
+              'Armed Forces Indicator':  random.choice([1,2,3,-8]),
+              'SIC':  int(random.choice(sic_codes)),
+              'SOC':  int(random.choice(soc_codes)),
+              'Census Return Method':  random.choice([1,2,3,4])} for x in range(num)]
   return output
 
 
 def create_row_house(code_list, num=1):
-  output = [{'Household_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
+  output = [{'Household_ID': random.randint(10**16, ((10**17)-1)),
               'Household_Address': fake.building_number(),
               'Household_Address_Postcode': fake.postcode(),
               'Household_OA': None,
@@ -77,7 +77,7 @@ def create_row_house(code_list, num=1):
   return output
 
 def create_row_CE(code_list, num=1):
-  output = [{'CE_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
+  output = [{'CE_ID': random.randint(10**16, ((10**17)-1)),
               'CE_Address': fake.building_number(),
               'CE_Address_Postcode': fake.postcode(),
               'CE_OA': None,
@@ -119,6 +119,7 @@ def split_DOB(person_index_df):
 # create a list of random house ids where the number of times the ID apears 
 # is less than or equal to the number of residents
 
+
 def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num_column_name = 'Number_Of_Usual_Residents'):
   # first create a giant list where every house id 
   list_of_ids_repeated = []
@@ -126,3 +127,4 @@ def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num
     id_repeated = [house_id for i in range(no_residents)]
     list_of_ids_repeated = list_of_ids_repeated + id_repeated
   return list_of_ids_repeated
+
