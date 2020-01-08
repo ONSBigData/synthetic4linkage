@@ -7,7 +7,7 @@ code_list = pd.read_csv('../data/possible_codes.csv')
 ###
 # Resident_index
 ###
-person_index_df = pd.DataFrame(create_row_resident(num=10, code_list =  code_list))
+person_index_df = pd.DataFrame(d.create_row_resident(num=10, code_list =  code_list))
 person_index_df = d.split_DOB(person_index_df)
 
 ###
