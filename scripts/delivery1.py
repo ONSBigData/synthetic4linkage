@@ -118,3 +118,11 @@ def split_DOB(person_index_df):
 
 # create a list of random house ids where the number of times the ID apears 
 # is less than or equal to the number of residents
+
+def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num_column_name = 'Number_Of_Usual_Residents'):
+  # first create a giant list where every house id 
+  list_of_ids_repeated = []
+  for house_id, no_residents in zip(df[id_column_name],df[num_column_name]): 
+    id_repeated = [house_id for i in range(no_residents)]
+    list_of_ids_repeated = list_of_ids_repeated + id_repeated
+  return list_of_ids_repeated

@@ -43,3 +43,4 @@ ce_index_df.to_csv('../output/ce_index.csv')
 ########
 
 # Easy to asign house to a person and then join after 
+
