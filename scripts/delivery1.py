@@ -130,4 +130,9 @@ def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num
 
 def generate_house_for_person(person_index_df, house_index_df):
   list_of_ids_repeated = generate_list_of_repeated_house_ids(house_index_df)
+  number_of_items = person_index_df.shape[0]
+  shorter_list_of_ids_repeated = random.sample(list_of_ids_repeated, number_of_items)
+  ## Now we want to nan a small percentage of values randomly so they can live in CEs
+  prop = int(shorter_list_of_ids_repeated.size * 0.2)
+  person_index_df['Household_ID'] = shorter_list_of_ids_repeated
   return person_index_df
