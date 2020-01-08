@@ -1,0 +1,81 @@
+import pandas as pd
+import numpy as np
+import datetime
+
+import random
+random.seed(a=42)
+
+from faker import Faker
+Faker.seed(42)
+fake = Faker('en_UK')
+#fake.seed(42) # please toggle depending on Faker version
+
+#############
+# generate data row by row
+#############
+
+def create_row(code_list, num=1):
+    country_codes = code_list.iloc[:, 0].dropna()
+    soc_codes = code_list.iloc[:, 1].dropna()
+    sic_codes = code_list.iloc[:, 2].dropna()
+    output = [{"Resident_ID": random.randint(10**18, ((10**19)-1)),
+              'Household_ID': None,
+              'CE_ID': None,
+              'First_Name': fake.first_name(),
+              'Middle_Name': None,
+              'Last_Name': fake.last_name(),
+              'date_time_obj': fake.date_between_dates(date_start=datetime.date(1904, 1, 1),
+                                                       date_end=datetime.date(2019, 12, 31)),
+              'Country_Of_Birth': country_codes[random.randint(0,len(country_codes))],
+              'Country_Of_Birth_UK':None,
+              'Sex':None,
+              'Marital_Status':None,
+              'Marital_Status_CCS':None,
+              'Residence_Type':None,
+              'Ethnic Group (five category)':None,
+              'Ethnicity: Tick Box':None,
+              'Alternative_Address_Type':None,
+              'Alternative_Address_Indicator':None,
+              'Alternative_Address':None,
+              'Alternative_Address_Postcode':None,
+              'Alternative_Address_Country': country_codes[random.randint(0,len(country_codes))],
+              'Alternative_Address_OA':None,
+              'Alternative_Address_UPRN':None,
+              '1_Year_Ago_Address_Type':None,
+              '1_Year_Ago_Address':None,
+              '1_Year_Ago_Address_Postcode':None,
+              '1_Year_Ago_Address_Country': country_codes[random.randint(0,len(country_codes))],
+              '1_Year_Ago_Address_OA':None,
+              '1_Year_Ago_Address_UPRN':None,
+              'Workplace_Type':None,
+              'Workplace_Address':None,
+              'Workplace_Address_Postcode':None,
+              'Workplace_Address_Country': country_codes[random.randint(0,len(country_codes))],
+              'Workplace_Address_UPRN':None,
+              'Activity Last Week':None,
+              'In_Full_Time_Education':None,
+              'Is_HH_Term_Time_Address':None,
+              'Armed Forces Indicator':None,
+              'SIC':  sic_codes[random.randint(0,len(sic_codes))],
+              'SOC':  soc_codes[random.randint(0,len(soc_codes))],
+              'Census Return Method':None} for x in range(num)]
+    return output
+
+
+############
+# date of birth from object
+############
+
+def calculate_age_on_31_12_2019(born):
+    today = datetime.date(2019, 12, 31)
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+
+
+def split_DOB(person_index_df):
+    person_index_df['Resident_Day_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.day)
+    person_index_df['Resident_Month_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.month)
+    person_index_df['Resident_Year_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.year)
+    person_index_df['Resident_Age'] = person_index_df['date_time_obj'].apply(calculate_age_on_31_12_2019)
+    person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
+    person_index_df = person_index_df.drop('date_time_obj', axis = 1)
+    return person_index_df
