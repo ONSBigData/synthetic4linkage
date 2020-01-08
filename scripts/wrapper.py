@@ -26,7 +26,7 @@ ce_index_df = pd.DataFrame(d.create_row_CE(num=10, code_list =  code_list))
 #######
 
 print(person_index_df['Country_Of_Birth'].head())
-print(house_index_df.head())
+print(house_index_df['Number_Of_Usual_Residents'].head())
 
 #####
 # Save file
