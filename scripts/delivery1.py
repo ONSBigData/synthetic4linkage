@@ -62,9 +62,9 @@ def create_row_resident(code_list, num=1):
 def create_row_house(code_list, num=1):
   output = [{'Household_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
               'Household_Address': None,
-              'Household_Address_Postcode': fake.first_name(),
+              'Household_Address_Postcode': None,
               'Household_OA': None,
-              'Household_UPRN': fake.last_name(),
+              'Household_UPRN': None,
               'Accomodation_Type':None,
               'Number_Of_Usual_Residents':None,
               'Ownership_Type':None,
@@ -73,8 +73,17 @@ def create_row_house(code_list, num=1):
   return output
 
 def create_row_CE():
+  output = [{'Household_ID': random.sample(range(10**16, ((10**17)-1)),1)[0],
+              'Household_Address': None,
+              'Household_Address_Postcode': None,
+              'Household_OA': None,
+              'Household_UPRN': None,
+              'Accomodation_Type':None,
+              'Number_Of_Usual_Residents':None,
+              'Ownership_Type':None,
+              'From_Dummy':None,
+              'Any_Relationships_CCS':None} for x in range(num)]
   return output
-
 
 
 ############
