@@ -8,8 +8,10 @@ Creating synthetic data for testing clerical linkage interface
 4. Assign people from the Person Index to each Household or CE
     1) Households should contain between 1 and 5 people
     2) CEs should contain between 6 and 49 people
-5. Copy a random 90% from the Person Index into the Census table and remove 1% of households/CEs
-6. Copy a random 90% of the Person Index into the CCS table and remove people from 1% households while keeping the address info in CCS household/CE list ('dummy households')
+5. Create some twins
+6. Create households with shared surnames and with few shared first names
+7. Copy a random 90% from the Person Index into the Census table and remove 1% of households/CEs
+8. Copy a random 90% of the Person Index into the CCS table and remove people from 1% households while keeping the address info in CCS household/CE list ('dummy households')
 
 ## Delivery 2 - pertubation - under development
 1. For records that appear in both census and CCS perturb on either record:
@@ -22,8 +24,7 @@ Creating synthetic data for testing clerical linkage interface
     7) 4% of postcodes
 2. Swap the geography (i.e. edit household table) for 50 of the CCS addresses (to mimic people moving house).
 3. 2% of people duplicated between 2 and 5 times in the same household (with a different person ID) and 5% to different households. Each instance should have a separate person ID
-4. Create some twins
-5. Create households with shared surnames and some with first names
+
 
 ## Delivery 3 - relationships - done
 
