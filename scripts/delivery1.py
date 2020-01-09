@@ -131,15 +131,50 @@ def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num
     list_of_ids_repeated = list_of_ids_repeated + id_repeated
   return list_of_ids_repeated
 
-def generate_house_for_person(person_index_df, house_index_df):
+def list_of_nans_generator(length_of_list):
+  array_of_nans = np.empty(length_of_list)
+  array_of_nans[:] = np.nan
+  list_of_nans = list(array_of_nans)
+  return list_of_nans
+
+
+def generate_house_for_person(person_index_df, house_index_df, ce_index_df):
+  # generate list of all house ids to use
   list_of_ids_repeated = generate_list_of_repeated_house_ids(house_index_df)
+  list_of_ids_repeated = generate_list_of_repeated_house_ids(house_index_df)
+  # total number of house ids to be assigned
+  length_of_list_of_items_repeated = len(list_of_ids_repeated)
+  # total number of items we need in any one column
+  number_of_items = person_index_df.shape[0]
   number_of_items = person_index_df.shape[0]
   shorter_list_of_ids_repeated = random.sample(list_of_ids_repeated, number_of_items)
+  # the nans we need to tag on the end to fill the column
   ## Now we want to nan a small percentage of values randomly so they can live in CEs
+  how_many_nans_do_we_need = number_of_items - length_of_list_of_items_repeated
   #prop = int(shorter_list_of_ids_repeated * 0.2)
+  list_of_nans = list_of_nans_generator(how_many_nans_do_we_need)
   person_index_df['Household_ID'] = shorter_list_of_ids_repeated
+  # all house id column values 
+  list_of_ids_repeated_correct_length = list_of_ids_repeated + list_of_nans
+  # put it in the df 
+  person_index_df['Household_ID'] = list_of_ids_repeated_correct_length
+  ##########
+  ### CE_ID column
+  ##########
+  # STEP 1: Generate list of nans same length as list of house ids
+  first_ce_nans = list_of_nans_generator(length_of_list_of_items_repeated)
+  # STEP 2: Generate long list of repeated CE ids
+  list_of_ce_ids_repeated = generate_list_of_repeated_house_ids(ce_index_df, id_column_name = 'CE_ID', num_column_name = 'Number_Of_Residents')
+  length_of_list_of_ce_ids_repeated = len(list_of_ce_ids_repeated)
+  # STEP 3: find number of extra nans needed to fill the column
+  how_many_nans_for_last_ce = number_of_items - (length_of_list_of_items_repeated+length_of_list_of_ce_ids_repeated)
+  last_ce_nans = list_of_nans_generator(how_many_nans_for_last_ce)
+  # STEP 4: Put all the list together
+  ce_id_list = first_ce_nans + list_of_ce_ids_repeated + last_ce_nans
+  person_index_df['CE_ID'] = ce_id_list
+  person_index_df = person_index_df.dropna(how = 'all', subset = ['Household_ID','CE_ID'])
   return person_index_df
-
+  return person_index_df
 
 def relationships_unit(id_list):
     output = [{"Resident_ID": id_list[y],
