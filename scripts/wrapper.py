@@ -32,6 +32,9 @@ ce_index_df = pd.DataFrame(d.create_row_CE(num=50, code_list =  code_list))
 person_index_df = d.generate_house_for_person(person_index_df, house_index_df, ce_index_df)
 ######
 
+# assign residence type 
+person_index_df['Residence_Type'] = person_index_df.apply(lambda x: d.assign_residence_type(x.Housing_ID, x.CE_ID), axis=1)
+
 
 print(person_index_df.head())
 print(person_index_df.tail())

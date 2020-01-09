@@ -155,3 +155,19 @@ def generate_relationships(census_table):
         if len(id_list) > 1:
             output = output.append(relationships_unit(id_list))
     return output
+
+###
+# Properly assign residence type column
+###
+
+def assign_residence_type(house_id, ce_id):
+  if ((house_id != np.nan) and (ce_id == np.nan)):
+    residence_type = 1
+  else: residence_type =  2
+  return residence_type
+
+
+
+#############
+### Extra functionality
+#############
