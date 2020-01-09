@@ -30,9 +30,10 @@ person_index_df = generate_house_for_person(person_index_df, house_index_df, ce_
 # assign residence type 
 person_index_df['Residence_Type'] = person_index_df['Household_ID'].apply(assign_residence_type)
 
-# Common last names 
+# Shared family names
 person_index_df = common_surnames_in_house(person_index_df)
-
+person_index_df = common_firstnames_in_house(person_index_df)
+person_index_df = create_twins(person_index_df, num=50)
 
 ####
 ### Join addresses 

@@ -102,11 +102,11 @@ def calculate_age_on_31_12_2019(born):
 
 
 def split_DOB(person_index_df):
-    person_index_df['Resident_Day_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.day)
-    person_index_df['Resident_Month_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.month)
-    person_index_df['Resident_Year_Of_Birth'] = person_index_df['date_time_obj'].apply(lambda x: x.year)
-    person_index_df['Resident_Age'] = person_index_df['date_time_obj'].apply(calculate_age_on_31_12_2019)
-    person_index_df['full_DOB'] = person_index_df['date_time_obj'].apply(lambda x: x.strftime("%d%m%Y"))
+    person_index_df['Resident_Day_Of_Birth'] = person_index_df.date_time_obj.apply(lambda x: x.day)
+    person_index_df['Resident_Month_Of_Birth'] = person_index_df.date_time_obj.apply(lambda x: x.month)
+    person_index_df['Resident_Year_Of_Birth'] = person_index_df.date_time_obj.apply(lambda x: x.year)
+    person_index_df['Resident_Age'] = person_index_df.date_time_obj.apply(calculate_age_on_31_12_2019)
+    person_index_df['full_DOB'] = person_index_df.date_time_obj.apply(lambda x: x.strftime("%d%m%Y"))
     person_index_df = person_index_df.drop('date_time_obj', axis = 1)
     return person_index_df
 
@@ -200,4 +200,40 @@ def join_to_populate_addresses(df_people, df_houses):
   return df_people
 
 
+#############
+### Extra functionality
+#############
 
+def common_surnames_in_house_(df):
+    # modifying a subset - not quite right use of loc
+    count = 0
+    for count in range(df.shape[0] - 1):
+        random_num = random.choice([1, 1, 0])  # one in three chnace of repeating last name
+        if ((df['Household_ID'].iloc[count] == df['Household_ID'].iloc[count + 1]) and (
+            df['Household_ID'].iloc[count] != np.nan) and (random_num == 1)):
+            df['Last_Name'].iloc[count + 1] = df['Last_Name'].iloc[count]
+        count = count + 1
+    return df
+
+
+def common_surnames_in_house(df):
+    house_list = df.Household_ID.dropna().unique().tolist()
+    subset = random.sample(house_list, round(len(house_list)/2))
+    for h in subset:
+        df.loc[df.Household_ID == h, 'Last_Name'] = fake.last_name()
+    return df
+
+def common_firstnames_in_house(df):
+    house_list = df.Household_ID.dropna().unique().tolist()
+    subset = random.sample(house_list, round(len(house_list)/2))
+    msk = ([True, True, False, False]*len(house_list)*2)[0:df.shape[0]]
+    # msk to choose only some of the family members to share first name
+    for h in subset:
+        df.loc[(df.Household_ID == h) & msk, 'First_Name'] = fake.first_name()
+    return df
+
+def create_twins(df, num=50):
+    subset = df.iloc[random.sample(range(df.shape[0]), num)].copy()
+    subset['Resident_ID'] = random.sample(range(10 ** 18, ((10 ** 19) - 1)), 50)
+    subset['First_Name'] = random.sample(df.First_Name.tolist(), 50)
+    return df.append(subset)
