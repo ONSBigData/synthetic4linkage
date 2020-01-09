@@ -13,12 +13,12 @@ person_index_df = d.split_DOB(person_index_df)
 ###
 # House_index
 ###
-house_index_df = pd.DataFrame(d.create_row_house(num=500, code_list =  code_list))
+house_index_df = pd.DataFrame(d.create_row_house(num=50, code_list =  code_list))
 
 ###
 # CE_index
 ###
-ce_index_df = pd.DataFrame(d.create_row_CE(num=50, code_list =  code_list))
+ce_index_df = pd.DataFrame(d.create_row_CE(num=5, code_list =  code_list))
 
 
 #######
