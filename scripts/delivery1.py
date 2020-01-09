@@ -198,6 +198,31 @@ def assign_residence_type(house_id):
 
 
 
+########
+### Joining address
+##########
+def join_to_populate_addresses(df_people, df_houses):
+  df_people = df_people.join(df_houses, on = 'Household_ID', how = 'left', rsuffix = 'house')
+  df_people.drop('Household_IDhouse', axis = 1)
+  rename_dict = {'Household_Address': "Address", 
+                  'Household_Address_Postcode': "Address_Postcode",
+                  'Household_OA': "OA", 
+                  'Household_UPRN': "UPRN",
+                  'Number_Of_Usual_Residents': "Number_Of_Residents"}
+  df_people.rename(rename_dict)
+  return df_people
+
+
 #############
 ### Extra functionality
 #############
+
+
+def common_surnames_in_house(df):
+  count = 0 
+  for count in range(df.shape[0] -1 ):
+    random_num = random.choice([1,1,0]) # one in three chnace of repeating last name
+    if ((df['Household_ID'].iloc[count] == df['Household_ID'].iloc[count+1]) and (df['Household_ID'].iloc[count] != np.nan) and (random_num == 1)):
+      df['Last_Name'].iloc[count+1] = df['Last_Name'].iloc[count]
+    count = count + 1
+  return df
