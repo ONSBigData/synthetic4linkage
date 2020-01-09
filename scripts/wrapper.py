@@ -1,6 +1,7 @@
 import pandas as pd
 from delivery1 import *
 from delivery2 import *
+from delivery3 import *
 
 code_list = pd.read_csv('../data/possible_codes.csv')
 
@@ -8,18 +9,15 @@ code_list = pd.read_csv('../data/possible_codes.csv')
 ###
 # Resident, house and CE indices
 ###
-person_index_df = pd.DataFrame(create_row_resident(num=3000, code_list = code_list))
-person_index_df = split_DOB(person_index_df)
-
-house_index_df = pd.DataFrame(create_row_house(num=500, code_list =  code_list))
-
-ce_index_df = pd.DataFrame(create_row_CE(num=50, code_list =  code_list))
+person_index_df = create_row_resident(num=3000, code_list = code_list)
+house_index_df = create_row_house(num=500, code_list =  code_list)
+ce_index_df = create_row_CE(num=50, code_list =  code_list)
 
 
 #######
 ### CHECK
 #######
-
+print(person_index_df.head())
 print(house_index_df.head())
 
 #######

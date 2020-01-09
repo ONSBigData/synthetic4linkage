@@ -8,7 +8,7 @@ random.seed(a=42)
 from faker import Faker
 #Faker.seed(42)
 fake = Faker('en_UK')
-#fake.seed(42) # please toggle depending on Faker version
+fake.seed(42) # please toggle depending on Faker version
 
 #############
 # generate data row by row
@@ -16,11 +16,11 @@ fake = Faker('en_UK')
 
 
 def create_row_resident(code_list, num=1):
-  country_codes = code_list.iloc[:, 0].dropna()
-  soc_codes = code_list.iloc[:, 1].dropna()
-  sic_codes = code_list.iloc[:, 2].dropna()
-  oa_codes = code_list.iloc[:,3].dropna()
-  output = [{"Resident_ID": random.randint(10**18, ((10**19)-1)),
+    country_codes = code_list.iloc[:, 0].dropna()
+    soc_codes = code_list.iloc[:, 1].dropna()
+    sic_codes = code_list.iloc[:, 2].dropna()
+    oa_codes = code_list.iloc[:,3].dropna()
+    output = [{"Resident_ID": random.randint(10**18, ((10**19)-1)),
               'Household_ID': None,
               'CE_ID': None,
               'First_Name': fake.first_name(),
@@ -61,7 +61,9 @@ def create_row_resident(code_list, num=1):
               'SIC':  int(random.choice(sic_codes)),
               'SOC':  int(random.choice(soc_codes)),
               'Census Return Method':  random.choice([1,2,3,4])} for y in range(num)]
-  return output
+    output2 = split_DOB(pd.DataFrame(output))
+    output2['Cluster_num'] = range(num)
+    return output2
 
 
 def create_row_house(code_list, num=1):
@@ -76,7 +78,7 @@ def create_row_house(code_list, num=1):
               'Ownership_Type':random.choice([1, 2, 3, 4, 5, -9, -7]),
               'From_Dummy': 0,
               'Any_Relationships_CCS':None} for x in range(num)]
-  return output
+  return pd.DataFrame(output)
 
 def create_row_CE(code_list, num=1):
   oa_codes = code_list.iloc[:, 3].dropna()
@@ -87,7 +89,7 @@ def create_row_CE(code_list, num=1):
               'CE_UPRN': random.randint(0,((10**12)-1)),
               'Nature_Of_Establishment': random.choice(list(range(1,23))+[-9, -7]),
               'Number_Of_Residents': random.randint(6,49)} for x in range(num)]
-  return output
+  return pd.DataFrame(output)
 
 
 ############
