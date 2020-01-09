@@ -60,7 +60,7 @@ def create_row_resident(code_list, num=1):
               'Armed Forces Indicator':  random.choice([1,2,3,-8]),
               'SIC':  int(random.choice(sic_codes)),
               'SOC':  int(random.choice(soc_codes)),
-              'Census Return Method':  random.choice([1,2,3,4])} for x in range(num)]
+              'Census Return Method':  random.choice([1,2,3,4])} for y in range(num)]
   return output
 
 
@@ -139,3 +139,19 @@ def generate_house_for_person(person_index_df, house_index_df):
   #prop = int(shorter_list_of_ids_repeated * 0.2)
   person_index_df['Household_ID'] = shorter_list_of_ids_repeated
   return person_index_df
+
+
+def relationships_unit(id_list):
+    output = [{"Resident_ID": id_list[y],
+               'Related_Resident_ID': id_list[x],
+               'Relationship': random.choice([-7, -9]+[i for i in range(1,13)])} for x in range(1, len(id_list)) for y in range(0, x)]
+    return output
+
+
+def generate_relationships(census_table):
+    output = pd.DataFrame(columns= ['Resident_ID', 'Related_Resident_ID', 'Relationship'])
+    for h in census_table['Household_ID'].unique():
+        id_list = census_table['Resident_ID'].loc[census_table['Household_ID'] == h].tolist()
+        if len(id_list) > 1:
+            output = output.append(relationships_unit(id_list))
+    return output
