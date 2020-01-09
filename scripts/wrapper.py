@@ -54,10 +54,10 @@ census_relationships = d.generate_relationships(person_index_df)
 # Save file
 #####
 
-person_index_df.to_csv('../output/person_index.csv')
-house_index_df.to_csv('../output/house_index.csv')
-ce_index_df.to_csv('../output/ce_index.csv')
-census_relationships.to_csv('../output/census_relationships.csv')
+person_index_df.to_csv('../output/person_index.csv', index = False)
+house_index_df.to_csv('../output/house_index.csv', index = False)
+ce_index_df.to_csv('../output/ce_index.csv', index = False)
+census_relationships.to_csv('../output/census_relationships.csv', index = False)
 
 
 ########
