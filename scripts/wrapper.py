@@ -33,7 +33,7 @@ person_index_df['Residence_Type'] = person_index_df['Household_ID'].apply(assign
 # Shared family names
 person_index_df = common_surnames_in_house(person_index_df)
 person_index_df = common_firstnames_in_house(person_index_df)
-person_index_df = create_twins(person_index_df, num=50)
+person_index_df = create_duplicates(person_index_df, num=50, twin=True)
 
 ####
 ### Join addresses 
@@ -53,6 +53,17 @@ person_index_df = create_twins(person_index_df, num=50)
 
 ccs_people, ccs_house, ccs_ce = lose_records(*CCS_scramble(person_index_df, house_index_df, ce_index_df), keep=True)
 census_people, census_house, census_ce = lose_records(person_index_df, house_index_df, ce_index_df, keep=True)
+
+#####
+#create duplicated people
+#####
+
+ccs_people = create_duplicates(create_duplicates(ccs_people, num= round(ccs_people.shape[0]*.02), change_house= False),
+                               num= round(ccs_people.shape[0]*.05),change_house =True)
+
+census_people = create_duplicates(create_duplicates(census_people, num= round(census_people.shape[0]*.02), change_house= False),
+                               num= round(census_people.shape[0]*.05),change_house =True)
+
 
 
 #####

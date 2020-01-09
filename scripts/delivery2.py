@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import random
 random.seed(a=42)
+from faker import Faker
+#Faker.seed(42)
+fake = Faker('en_UK')
+fake.seed(42)
 
 
 #############
@@ -64,8 +68,13 @@ def common_firstnames_in_house(df):
         df.loc[(df.Household_ID == h) & msk, 'First_Name'] = fake.first_name()
     return df
 
-def create_twins(df, num=50):
+
+def create_duplicates(df, num=50, change_house=False, twin=False):
     subset = df.iloc[random.sample(range(df.shape[0]), num)].copy()
-    subset['Resident_ID'] = random.sample(range(10 ** 18, ((10 ** 19) - 1)), 50)
-    subset['First_Name'] = random.sample(df.First_Name.tolist(), 50)
+    subset['Resident_ID'] = random.sample(range(10 ** 18, ((10 ** 19) - 1)), num)
+    if twin:
+        subset['First_Name'] = random.sample(df.First_Name.tolist(), num)
+    if change_house:
+        subset['Household_ID'] = random.sample(df.Household_ID.dropna().tolist(), num)
+        subset['CE_ID'] = None
     return df.append(subset)
