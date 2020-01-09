@@ -51,22 +51,24 @@ person_index_df = create_twins(person_index_df, num=50)
 # duplicate for CCS with modified ID's
 #####
 
-ccs_people, ccs_house, ccs_ce = CCS_scramble(person_index_df, house_index_df, ce_index_df)
+ccs_people, ccs_house, ccs_ce = lose_records(*CCS_scramble(person_index_df, house_index_df, ce_index_df), keep=True)
+census_people, census_house, census_ce = lose_records(person_index_df, house_index_df, ce_index_df, keep=True)
+
 
 #####
 # Create relationships from census table
 #####
 
-census_relationships = generate_relationships(person_index_df)
+census_relationships = generate_relationships(census_people)
 
 
 #####
 # Save files
 #####
 
-person_index_df.to_csv('../output/census_residents.csv', index = False)
-house_index_df.to_csv('../output/census_households.csv', index = False)
-ce_index_df.to_csv('../output/census_ce.csv', index = False)
+census_people.to_csv('../output/census_residents.csv', index = False)
+census_house.to_csv('../output/census_households.csv', index = False)
+census_ce.to_csv('../output/census_ce.csv', index = False)
 census_relationships.to_csv('../output/census_relationships.csv', index = False)
 ccs_people.to_csv('../output/ccs_residents.csv', index = False)
 ccs_house.to_csv('../output/ccs_households.csv', index = False)
