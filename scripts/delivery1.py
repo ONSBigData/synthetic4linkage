@@ -190,10 +190,10 @@ def generate_relationships(census_table):
 # Properly assign residence type column
 ###
 
-def assign_residence_type(house_id, ce_id):
-  if ((house_id != np.nan) and (ce_id == np.nan)):
-    residence_type = 1
-  else: residence_type =  2
+def assign_residence_type(house_id):
+  if np.isnan(house_id):
+    residence_type = 2
+  else: residence_type =  1
   return residence_type
 
 

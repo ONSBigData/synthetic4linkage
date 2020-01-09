@@ -13,12 +13,12 @@ person_index_df = d.split_DOB(person_index_df)
 ###
 # House_index
 ###
-house_index_df = pd.DataFrame(d.create_row_house(num=50, code_list =  code_list))
+house_index_df = pd.DataFrame(d.create_row_house(num=500, code_list =  code_list))
 
 ###
 # CE_index
 ###
-ce_index_df = pd.DataFrame(d.create_row_CE(num=5, code_list =  code_list))
+ce_index_df = pd.DataFrame(d.create_row_CE(num=50, code_list =  code_list))
 
 
 #######
@@ -32,11 +32,14 @@ ce_index_df = pd.DataFrame(d.create_row_CE(num=5, code_list =  code_list))
 person_index_df = d.generate_house_for_person(person_index_df, house_index_df, ce_index_df)
 ######
 
-# assign residence type 
-person_index_df['Residence_Type'] = person_index_df.apply(lambda x: d.assign_residence_type(x.Housing_ID, x.CE_ID), axis=1)
-
-
 print(person_index_df.head())
+
+# assign residence type 
+person_index_df['Residence_Type'] = person_index_df['Household_ID'].apply(d.assign_residence_type)
+
+
+print(person_index_df['Residence_Type'].head())
+print(person_index_df['Residence_Type'].tail())
 print(person_index_df.tail())
 #print(ce_index_df.head())
 
