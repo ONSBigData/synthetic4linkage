@@ -171,21 +171,6 @@ def generate_house_for_person(person_index_df, house_index_df, ce_index_df):
   person_index_df = person_index_df.dropna(how = 'all', subset = ['Household_ID','CE_ID'])
   return person_index_df
 
-def relationships_unit(id_list):
-    output = [{"Resident_ID": id_list[y],
-               'Related_Resident_ID': id_list[x],
-               'Relationship': random.choice([-7, -9]+[i for i in range(1,13)])} for x in range(1, len(id_list)) for y in range(0, x)]
-    return output
-
-
-def generate_relationships(census_table):
-    output = pd.DataFrame(columns= ['Resident_ID', 'Related_Resident_ID', 'Relationship'])
-    for h in census_table['Household_ID'].unique():
-        id_list = census_table['Resident_ID'].loc[census_table['Household_ID'] == h].tolist()
-        if len(id_list) > 1:
-            output = output.append(relationships_unit(id_list))
-    return output
-
 ###
 # Properly assign residence type column
 ###
@@ -213,16 +198,4 @@ def join_to_populate_addresses(df_people, df_houses):
   return df_people
 
 
-#############
-### Extra functionality
-#############
 
-
-def common_surnames_in_house(df):
-  count = 0 
-  for count in range(df.shape[0] -1 ):
-    random_num = random.choice([1,1,0]) # one in three chnace of repeating last name
-    if ((df['Household_ID'].iloc[count] == df['Household_ID'].iloc[count+1]) and (df['Household_ID'].iloc[count] != np.nan) and (random_num == 1)):
-      df['Last_Name'].iloc[count+1] = df['Last_Name'].iloc[count]
-    count = count + 1
-  return df

@@ -34,8 +34,6 @@ ce_index_df = pd.DataFrame(d.create_row_CE(num=50, code_list =  code_list))
 person_index_df = d.generate_house_for_person(person_index_df, house_index_df, ce_index_df)
 ######
 
-
-
 # assign residence type 
 person_index_df['Residence_Type'] = person_index_df['Household_ID'].apply(d.assign_residence_type)
 
@@ -49,12 +47,25 @@ person_index_df = d.common_surnames_in_house(person_index_df)
 
 person_index_df = d.join_to_populate_addresses(person_index_df, house_index_df)
 
-
-
 print(person_index_df.head())
 #print(person_index_df.tail())
 #print(person_index_df[['Household_ID','Last_Name']].head(10))
 #print(person_index_df[['Household_ID','Last_Name']].tail(10))
+
+
+
+########
+## Make a big table of everything 
+########
+
+# Easy to asign house to a person and then join after 
+
+
+#####
+# duplicate for CCS with modified ID's
+#####
+
+ccs_people, ccs_house, ccs_ce = d.CCS_scramble(person_index_df, house_index_df, ce_index_df)
 
 #####
 # Create relationships from census table
@@ -64,18 +75,10 @@ census_relationships = d.generate_relationships(person_index_df)
 
 
 #####
-# Save file
+# Save files
 #####
 
 person_index_df.to_csv('../output/person_index.csv', index = False)
 house_index_df.to_csv('../output/house_index.csv', index = False)
 ce_index_df.to_csv('../output/ce_index.csv', index = False)
 census_relationships.to_csv('../output/census_relationships.csv', index = False)
-
-
-########
-## Make a big table of everything 
-########
-
-# Easy to asign house to a person and then join after 
-
