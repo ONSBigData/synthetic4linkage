@@ -24,7 +24,7 @@ def create_row_resident(code_list, num=1):
               'Household_ID': None,
               'CE_ID': None,
               'First_Name': fake.first_name(),
-              'Middle_Name': '-9' if random.random() < .5 else fake.first_name()
+              'Middle_Name': '-9' if random.random() < .5 else fake.first_name(),
               'Last_Name': fake.last_name(),
               'date_time_obj': fake.date_between_dates(date_start=datetime.date(1904, 1, 1),
                                                        date_end=datetime.date(2019, 12, 31)),
@@ -65,6 +65,7 @@ def create_row_resident(code_list, num=1):
 
 
 def create_row_house(code_list, num=1):
+  oa_codes = code_list.iloc[:, 3].dropna()
   output = [{'Household_ID': random.randint(10**16, ((10**17)-1)),
               'Household_Address': fake.street_address()+', '+fake.city(),
               'Household_Address_Postcode': fake.postcode(),
@@ -78,6 +79,7 @@ def create_row_house(code_list, num=1):
   return output
 
 def create_row_CE(code_list, num=1):
+  oa_codes = code_list.iloc[:, 3].dropna()
   output = [{'CE_ID': random.randint(10**16, ((10**17)-1)),
               'CE_Address': fake.street_address()+', '+fake.city(),
               'CE_Address_Postcode': fake.postcode(),
