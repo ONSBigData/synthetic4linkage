@@ -13,7 +13,7 @@ Creating synthetic data for testing clerical linkage interface
 7. Copy a random 94% from the Person Index into the Census table and remove 3% of households/CEs
 8. Copy a random 94% of the Person Index into the CCS table and remove people from 3% households while keeping the address info in CCS household/CE list ('dummy households')
 
-## Delivery 2 - pertubation - under development
+## Delivery 2 - pertubation - done
 1. For records that appear in both census and CCS perturb on either record:
     1) 35% of forename variables
     2) 32% of surname variables
@@ -35,4 +35,4 @@ Creating synthetic data for testing clerical linkage interface
 1. Add 200 Visitors records and link them randomly to the census households and make some of the census visitors (say 50) person records in CCS.
 2. Add 200 Visitors records and link them randomly to the CCS households and make some of the CCS visitor records (say 50) person records in Census.
 
-## Delivery 5 - cluster numbers - todo
+## Delivery 5 - cluster numbers
