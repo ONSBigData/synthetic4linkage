@@ -65,6 +65,15 @@ census_people = create_duplicates(create_duplicates(census_people, num= round(ce
                                num= round(census_people.shape[0]*.05),change_house =True)
 
 
+#####
+# required pertubations on both sides
+#####
+
+ccs_people = add_missing_codes_to_some(pertubation21(ccs_people))
+census_people = add_missing_codes_to_some(census_people)
+ccs_house = add_missing_codes_to_address(perturb_geography(ccs_house))
+census_house = add_missing_codes_to_address(census_house)
+
 
 #####
 # Create relationships from census table
@@ -77,10 +86,10 @@ census_relationships = generate_relationships(census_people)
 # Save files
 #####
 
-census_people.to_csv('../output/census_residents.csv', index = False)
+census_people.sort_values('Cluster_num').to_csv('../output/census_residents.csv', index = False)
 census_house.to_csv('../output/census_households.csv', index = False)
 census_ce.to_csv('../output/census_ce.csv', index = False)
 census_relationships.to_csv('../output/census_relationships.csv', index = False)
-ccs_people.to_csv('../output/ccs_residents.csv', index = False)
+ccs_people.sort_values('Cluster_num').to_csv('../output/ccs_residents.csv', index = False)
 ccs_house.to_csv('../output/ccs_households.csv', index = False)
 ccs_ce.to_csv('../output/ccs_ce.csv', index = False)

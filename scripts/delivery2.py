@@ -6,7 +6,11 @@ from faker import Faker
 #Faker.seed(42)
 fake = Faker('en_UK')
 fake.seed(42)
+import string
 
+# overall missingness in string variables and typo prevalence
+GEN_MISS = .03
+GEN_TYPO = .02
 
 #############
 ### creating ccs records with new id's
@@ -78,3 +82,86 @@ def create_duplicates(df, num=50, change_house=False, twin=False):
         subset['Household_ID'] = random.sample(df.Household_ID.dropna().tolist(), num)
         subset['CE_ID'] = None
     return df.append(subset)
+
+
+###############
+# pertubations as listed in delivery 2.1
+###############
+
+def simple_typos(word):
+    ix = random.choice(range(len(word)))
+    new_word = ''.join([word[w] if w != ix else random.choice(string.ascii_letters) for w in range(len(word))])
+    return new_word
+
+
+def pertubation21(ccs_people):
+    # for each variable, first we replace some completely
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[.20, 1-.20])
+    ccs_people.loc[subset,'First_Name'] = random.sample(ccs_people.First_Name.tolist(), sum(subset))
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[.20, 1-.20])
+    ccs_people.loc[subset,'Last_Name'] = random.sample(ccs_people.Last_Name.tolist(), sum(subset))
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[.02, 1-.02])
+    ccs_people.loc[subset,'Sex'] = random.sample(ccs_people.Sex.tolist(), sum(subset))
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[.15, 1-.15])
+    ccs_people.loc[subset,'Resident_Day_Of_Birth'] = random.sample(ccs_people.Resident_Day_Of_Birth.tolist(), sum(subset))
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[.13, 1-.13])
+    ccs_people.loc[subset,'Resident_Month_Of_Birth'] = random.sample(ccs_people.Resident_Month_Of_Birth.tolist(), sum(subset))
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[.13, 1-.13])
+    ccs_people.loc[subset,'Resident_Year_Of_Birth'] = random.sample(ccs_people.Resident_Year_Of_Birth.tolist(), sum(subset))
+
+    return ccs_people
+
+def add_missing_codes_to_some(ccs_people):
+    # introduce missingness and typos on both sides
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[3*GEN_TYPO, 1-3*GEN_TYPO])
+    ccs_people.loc[subset,'First_Name'] = ccs_people.loc[subset,'First_Name'].transform(simple_typos)
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[GEN_MISS, 1-GEN_MISS])
+    ccs_people.loc[subset,'First_Name'] = -9
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[3*GEN_TYPO, 1-3*GEN_TYPO])
+    ccs_people.loc[subset,'Last_Name'] = ccs_people.loc[subset,'Last_Name'].transform(simple_typos)
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[GEN_MISS, 1 - GEN_MISS])
+    ccs_people.loc[subset, 'Last_Name'] = -9
+
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[GEN_MISS, 1 - GEN_MISS])
+    ccs_people.loc[subset, 'Resident_Day_Of_Birth'] = -9
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[GEN_MISS, 1 - GEN_MISS])
+    ccs_people.loc[subset, 'Resident_Month_Of_Birth'] = -9
+    subset = np.random.choice([True, False], size=ccs_people.shape[0], p=[GEN_MISS, 1 - GEN_MISS])
+    ccs_people.loc[subset, 'Resident_Year_Of_Birth'] = -9
+
+    return ccs_people
+
+def perturb_geography(ccs_house):
+    #swaping houses for 50 (2%) of households
+    subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[.02, 1 - .02])
+    ccs_house.loc[subset, 'Household_ID'] =  random.sample(ccs_house.loc[subset, 'Household_ID'].tolist(), sum(subset))
+
+    #  adding errors
+    subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[.02, 1-.02])
+    ccs_house.loc[subset,'Household_Address_Postcode'] = random.sample(ccs_house.Household_Address_Postcode.tolist(), sum(subset))
+    subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[.02, 1 - .02])
+    ccs_house.loc[subset, 'Household_Address'] = random.sample(ccs_house.Household_Address.tolist(),sum(subset))
+
+    return ccs_house
+
+def add_missing_codes_to_address(ccs_house):
+    #introduce missingness and typos on both sides
+    subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_TYPO, 1-GEN_TYPO])
+    ccs_house.loc[subset,'Household_Address_Postcode'] = ccs_house.loc[subset,'Household_Address_Postcode'].transform(simple_typos)
+    subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_MISS, 1-GEN_MISS])
+    ccs_house.loc[subset,'Household_Address_Postcode'] = -9
+
+    subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_TYPO, 1 - GEN_TYPO])
+    ccs_house.loc[subset, 'Household_Address'] = ccs_house.loc[subset, 'Household_Address'].transform(simple_typos)
+    subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_MISS, 1 - GEN_MISS])
+    ccs_house.loc[subset, 'Household_Address'] = -9
+
+    return ccs_house
