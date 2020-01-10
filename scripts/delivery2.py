@@ -24,7 +24,43 @@ def CCS_scramble(df_people, df_house, df_ce):
     df_people = df_people.replace({"CE_ID": ce_dict})
     df_house = df_house.replace({"Household_ID": house_dict})
     df_ce = df_ce.replace({"CE_ID": ce_dict})
-    return df_people, df_house, df_ce
+    return reformat_ccs_people(df_people), reformat_ccs_house(df_house), reformat_ccs_ce(df_ce)
+
+def reformat_ccs_people(df_people):
+    df_people = df_people.drop(['1_Year_Ago_Address', '1_Year_Ago_Address_Country','1_Year_Ago_Address_OA',
+                                '1_Year_Ago_Address_Postcode', '1_Year_Ago_Address_Type', '1_Year_Ago_Address_UPRN',
+                                'Armed Forces Indicator', 'Census Return Method', 'Country_Of_Birth',
+                                'Country_Of_Birth_UK', 'Marital_Status', 'SIC','SOC',
+                                'Workplace_Address', 'Workplace_Address_Country',
+                                'Workplace_Address_Postcode', 'Workplace_Address_UPRN',
+                                'Workplace_Type'                                ], axis=1)
+
+    df_people = df_people.rename(columns={"Activity_Last_Week":"Activity_Last_Week_For_CCS",
+                                        'Ethnic Group (five category)':'Ethnic Group (five category - CCS)',
+                                        'Ethnicity: Tick Box':'Ethnicity: Tick Box (CCS)',
+                                        'Marital_Status_CCS':'Marital_Status'   })
+    return df_people
+
+
+def reformat_ccs_house(df_house):
+    df_house = df_house.drop(['From_Dummy', 'Household_OA'], axis=1)
+    df_house = df_house.rename(columns={"Any_Relationships_CCS": "Any_Relationships",
+                                        'Number_Of_Usual_Residents': 'Resident_Count'})
+    df_house['Census_Address'] = df_house['Household_Address']
+    df_house['Census_Address_Postcode'] = df_house['Household_Address_Postcode']
+    df_house['Census_Address_Country'] = [random.choice( range(100, 1000))  for x in range(df_house.shape[0])]
+    df_house['Census_Address_Indicator'] = random.sample(  range(0,((10**12)-1)) , df_house.shape[0])
+    df_house['Resident_Count_verify'] = df_house['Resident_Count']
+    df_house['Other_Address_Count'] = [random.choice(range(0,99)) for x in range(df_house.shape[0])]
+    df_house['Other_Address_Count_verify'] = df_house['Other_Address_Count']
+    df_house['Ownership_Type'] = [random.choice([1,2,3,4,5,-7,-9]) for x in  range(df_house.shape[0])]
+    return df_house
+
+
+def reformat_ccs_ce(df_ce):
+    df_ce = df_ce.drop('CE_UPRN', axis =1)
+    return df_ce
+
 
 def lose_records(df_people, df_house, df_ce, prop = .06, prop2= .03, keep = False):
     subset_house = random.sample(df_house.Household_ID.tolist(), round(df_house.shape[0]*(1-prop2)))
@@ -33,7 +69,7 @@ def lose_records(df_people, df_house, df_ce, prop = .06, prop2= .03, keep = Fals
     if keep:
         new_house = df_house.copy()
         new_ce = df_ce.copy()
-        new_house.loc[(df_house.Household_ID.isin(subset_house)), 'From_Dummy'] = 1
+        # new_house.loc[(df_house.Household_ID.isin(subset_house)), 'From_Dummy'] = 1
     else:
         new_house = df_house.loc[df_house.Household_ID.isin(subset_house)].copy()
         new_ce = df_ce.loc[df_ce.CE_ID.isin(subset_ce)].copy()
