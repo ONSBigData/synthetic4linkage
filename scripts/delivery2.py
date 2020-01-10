@@ -29,14 +29,14 @@ def CCS_scramble(df_people, df_house, df_ce):
 def lose_records(df_people, df_house, df_ce, prop = .06, prop2= .03, keep = False):
     subset_house = random.sample(df_house.Household_ID.tolist(), round(df_house.shape[0]*(1-prop2)))
     subset_ce = random.sample(df_ce.CE_ID.tolist(), round(df_ce.shape[0] *(1- prop2)))
-    new_people = df_people.loc[(df_people.Household_ID. isin(subset_house)) | (df_people.CE_ID.isin(subset_ce))].sample(frac = 1 - prop, replace=False, random_state=42)
+    new_people = df_people.loc[(df_people.Household_ID. isin(subset_house)) | (df_people.CE_ID.isin(subset_ce))].sample(frac = 1 - prop, replace=False, random_state=42).copy()
     if keep:
-        new_house = df_house
-        new_ce = df_ce
+        new_house = df_house.copy()
+        new_ce = df_ce.copy()
         new_house.loc[(df_house.Household_ID.isin(subset_house)), 'From_Dummy'] = 1
     else:
-        new_house = df_house.loc[df_house.Household_ID.isin(subset_house)]
-        new_ce = df_ce.loc[df_ce.CE_ID.isin(subset_ce)]
+        new_house = df_house.loc[df_house.Household_ID.isin(subset_house)].copy()
+        new_ce = df_ce.loc[df_ce.CE_ID.isin(subset_ce)].copy()
     return new_people, new_house, new_ce
 
 

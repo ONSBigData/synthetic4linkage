@@ -9,9 +9,9 @@ code_list = pd.read_csv('../data/possible_codes.csv')
 ###
 # Resident, house and CE indices
 ###
-person_index_df = create_row_resident(num=3000, code_list = code_list)
-house_index_df = create_row_house(num=500, code_list =  code_list)
-ce_index_df = create_row_CE(num=50, code_list =  code_list)
+person_index_df = create_row_resident(num=30000, code_list = code_list)
+house_index_df = create_row_house(num=5000, code_list =  code_list)
+ce_index_df = create_row_CE(num=500, code_list =  code_list)
 
 
 #######
@@ -52,7 +52,7 @@ person_index_df = create_duplicates(person_index_df, num=50, twin=True)
 #####
 
 ccs_people, ccs_house, ccs_ce = lose_records(*CCS_scramble(person_index_df, house_index_df, ce_index_df), keep=True)
-census_people, census_house, census_ce = lose_records(person_index_df, house_index_df, ce_index_df, keep=True)
+census_people, census_house, census_ce = lose_records(person_index_df, house_index_df, ce_index_df, keep=False)
 
 #####
 #create duplicated people
