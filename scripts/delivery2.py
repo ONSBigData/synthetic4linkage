@@ -17,9 +17,9 @@ GEN_TYPO = .02
 #############
 
 def CCS_scramble(df_people, df_house, df_ce):
-    house_dict = {x: random.randint(10 ** 16, ((10 ** 17) - 1)) for x in df_house.Household_ID}
-    ce_dict = {x:random.randint(10 ** 16, ((10 ** 17) - 1)) for x in df_ce['CE_ID']}
-    df_people['Resident_ID'] = random.sample(range(10 ** 16, ((10 ** 17) - 1)), df_people.shape[0])
+    house_dict = {x: str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_house.Household_ID}
+    ce_dict = {x: str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_ce['CE_ID']}
+    df_people['Resident_ID'] = [str(x) for x in random.sample(range(10 ** 16, ((10 ** 17) - 1)), df_people.shape[0])]
     df_people = df_people.replace({"Household_ID": house_dict})
     df_people = df_people.replace({"CE_ID": ce_dict})
     df_house = df_house.replace({"Household_ID": house_dict})

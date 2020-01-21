@@ -20,7 +20,7 @@ def create_row_resident(code_list, num=1):
     soc_codes = code_list.iloc[:, 1].dropna()
     sic_codes = code_list.iloc[:, 2].dropna()
     oa_codes = code_list.iloc[:,3].dropna()
-    output = [{"Resident_ID": random.randint(10**18, ((10**19)-1)),
+    output = [{"Resident_ID": str(random.randint(10**18, ((10**19)-1))),
               'Household_ID': None,
               'CE_ID': None,
               'First_Name': fake.first_name(),
@@ -42,18 +42,18 @@ def create_row_resident(code_list, num=1):
               'Alternative_Address_Postcode': fake.postcode(),
               'Alternative_Address_Country': int(random.choice(country_codes)),
               'Alternative_Address_OA': random.choice(oa_codes),
-              'Alternative_Address_UPRN': random.randint(0,((10**12)-1)),
+              'Alternative_Address_UPRN': str(random.randint(0,((10**12)-1))),
               '1_Year_Ago_Address_Type':  random.choice([1,2,3,4,5,-7,-9]),
               '1_Year_Ago_Address': fake.street_address()+', '+fake.city(),
               '1_Year_Ago_Address_Postcode': fake.postcode(),
               '1_Year_Ago_Address_Country': int(random.choice(country_codes)),
               '1_Year_Ago_Address_OA': random.choice(oa_codes),
-              '1_Year_Ago_Address_UPRN': random.randint(0,((10**12)-1)),
+              '1_Year_Ago_Address_UPRN': str(random.randint(0,((10**12)-1))),
               'Workplace_Type': random.choice([1,2,3,4,-7,-9]),
               'Workplace_Address': fake.street_address()+', '+fake.city(),
               'Workplace_Address_Postcode': fake.postcode(),
               'Workplace_Address_Country': int(random.choice(country_codes)),
-              'Workplace_Address_UPRN': random.randint(0,((10**12)-1)),
+              'Workplace_Address_UPRN': str(random.randint(0,((10**12)-1))),
               'Activity Last Week':  random.choice([-9]+[x for x in range(1,8)]),
               'In_Full_Time_Education': random.choice([1,2,-7,-9]),
               'Is_HH_Term_Time_Address': random.choice([1,2,3,-7,-9]),
@@ -68,11 +68,11 @@ def create_row_resident(code_list, num=1):
 
 def create_row_house(code_list, num=1):
   oa_codes = code_list.iloc[:, 3].dropna()
-  output = [{'Household_ID': random.randint(10**16, ((10**17)-1)),
+  output = [{'Household_ID': str(random.randint(10**16, ((10**17)-1))),
               'Household_Address': fake.street_address()+', '+fake.city(),
               'Household_Address_Postcode': fake.postcode(),
               'Household_OA': random.choice(oa_codes),
-              'Household_UPRN': random.randint(0,((10**12)-1)),
+              'Household_UPRN': str(random.randint(0,((10**12)-1))),
               'Accomodation_Type':random.choice([1, 2, 3, 4, 5, 6, 7, -9, -7, -3]),
               'Number_Of_Usual_Residents':random.choice([1,1,1,2,2,2,2,2,3,4,5]),
               'Ownership_Type':random.choice([1, 2, 3, 4, 5, -9, -7]),
@@ -82,11 +82,11 @@ def create_row_house(code_list, num=1):
 
 def create_row_CE(code_list, num=1):
   oa_codes = code_list.iloc[:, 3].dropna()
-  output = [{'CE_ID': random.randint(10**16, ((10**17)-1)),
+  output = [{'CE_ID': str(random.randint(10**16, ((10**17)-1))),
               'CE_Address': fake.street_address()+', '+fake.city(),
               'CE_Address_Postcode': fake.postcode(),
               'CE_OA': random.choice(oa_codes),
-              'CE_UPRN': random.randint(0,((10**12)-1)),
+              'CE_UPRN': str(random.randint(0,((10**12)-1))),
               'Nature_Of_Establishment': random.choice(list(range(1,23))+[-9, -7]),
               'Number_Of_Residents': random.randint(6,49)} for x in range(num)]
   return pd.DataFrame(output)
@@ -133,12 +133,6 @@ def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num
     list_of_ids_repeated = list_of_ids_repeated + id_repeated
   return list_of_ids_repeated
 
-def list_of_nans_generator(length_of_list):
-  array_of_nans = np.empty(length_of_list)
-  array_of_nans[:] = np.nan
-  list_of_nans = list(array_of_nans)
-  return list_of_nans
-
 
 def generate_house_for_person(person_index_df, house_index_df, ce_index_df):
   # generate list of all house ids to use
@@ -151,7 +145,7 @@ def generate_house_for_person(person_index_df, house_index_df, ce_index_df):
   ## Now we want to nan a small percentage of values randomly so they can live in CEs
   how_many_nans_do_we_need = number_of_items - length_of_list_of_items_repeated
   #prop = int(shorter_list_of_ids_repeated * 0.2)
-  list_of_nans = list_of_nans_generator(how_many_nans_do_we_need)
+  list_of_nans = ['' for x in range(how_many_nans_do_we_need)]
   # all house id column values 
   list_of_ids_repeated_correct_length = list_of_ids_repeated + list_of_nans
   # put it in the df 
@@ -160,13 +154,13 @@ def generate_house_for_person(person_index_df, house_index_df, ce_index_df):
   ### CE_ID column
   ##########
   # STEP 1: Generate list of nans same length as list of house ids
-  first_ce_nans = list_of_nans_generator(length_of_list_of_items_repeated)
+  first_ce_nans = ['' for x in range(length_of_list_of_items_repeated)]
   # STEP 2: Generate long list of repeated CE ids
   list_of_ce_ids_repeated = generate_list_of_repeated_house_ids(ce_index_df, id_column_name = 'CE_ID', num_column_name = 'Number_Of_Residents')
   length_of_list_of_ce_ids_repeated = len(list_of_ce_ids_repeated)
   # STEP 3: find number of extra nans needed to fill the column
   how_many_nans_for_last_ce = number_of_items - (length_of_list_of_items_repeated+length_of_list_of_ce_ids_repeated)
-  last_ce_nans = list_of_nans_generator(how_many_nans_for_last_ce)
+  last_ce_nans = ['' for x in range(how_many_nans_for_last_ce)]
   # STEP 4: Put all the list together
   ce_id_list = first_ce_nans + list_of_ce_ids_repeated + last_ce_nans
   person_index_df['CE_ID'] = ce_id_list
@@ -178,7 +172,7 @@ def generate_house_for_person(person_index_df, house_index_df, ce_index_df):
 ###
 
 def assign_residence_type(house_id):
-  if np.isnan(house_id):
+  if (house_id == ''):
     residence_type = 2
   else: residence_type =  1
   return residence_type

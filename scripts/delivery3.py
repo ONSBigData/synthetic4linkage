@@ -20,6 +20,6 @@ def generate_relationships(census_table):
     output = pd.DataFrame(columns= ['Resident_ID', 'Related_Resident_ID', 'Relationship'])
     for h in census_table.Household_ID.unique():
         id_list = census_table.loc[census_table.Household_ID == h, 'Resident_ID'].tolist()
-        if len(id_list) > 1:
+        if ((len(id_list) > 1) & (h!='')):
             output = output.append(relationships_unit(id_list))
     return output

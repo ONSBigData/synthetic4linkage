@@ -18,7 +18,7 @@ fake.seed(42) # please toggle depending on Faker version
 def create_census_visitor(code_list, house_num, num=1):
     country_codes = code_list.iloc[:, 0].dropna().astype('int64')
     oa_codes = code_list.iloc[:, 3].dropna()
-    output = [{"Visitor_ID": random.randint(10**18, ((10**19)-1)),
+    output = [{"Visitor_ID": str(random.randint(10**18, ((10**19)-1))),
               'Household_ID': random.choice(house_num),
               'Visitor_First_Name': fake.first_name(),
               'Visitor_Last_Name': fake.last_name(),
@@ -29,14 +29,14 @@ def create_census_visitor(code_list, house_num, num=1):
               'Visitor_Address_Postcode': fake.postcode(),
               'Visitor_Address_Country': int(random.choice(country_codes)),
               'Visitor_Address_OA': random.choice(oa_codes),
-              'Alternative_Address_UPRN': random.randint(0,((10**12)-1))}]
+              'Alternative_Address_UPRN': str(random.randint(0,((10**12)-1)))} for x in range(num)]
     output2 = split_DOB_visitor(pd.DataFrame(output))
     return output2
 
 
 def create_ccs_visitor(code_list, house_num, num=1):
     country_codes = code_list.iloc[:, 0].dropna().astype('int64')
-    output = [{"Visitor_ID": random.randint(10 ** 18, ((10 ** 19) - 1)),
+    output = [{"Visitor_ID": str(random.randint(10 ** 18, ((10 ** 19) - 1))),
                'Household_ID': random.choice(house_num),
                'First_Name': fake.first_name(),
                'Last_Name': fake.last_name(),
@@ -47,7 +47,7 @@ def create_ccs_visitor(code_list, house_num, num=1):
                'Visitor_Address': fake.street_address() + ', ' + fake.city(),
                'Visitor_Address_Postcode': fake.postcode(),
                'Visitor_Address_Country': int(random.choice(country_codes)),
-               'Alternative_Address_UPRN': random.randint(0, ((10 ** 12) - 1))}]
+               'Alternative_Address_UPRN': str(random.randint(0, ((10 ** 12) - 1)))} for x in range(num)]
     output2 = split_DOB_visitor(pd.DataFrame(output))
     output2['Visitor_Age_Last_Birthday'] = output2['Visitor_Age']
     return pd.DataFrame(output2)
