@@ -1,7 +1,7 @@
 # synthetic4linkage
 Creating synthetic data for testing clerical linkage interface
 
-## Delivery 1 - generating data - done
+## Delivery 1 - generating data 
 1. Generate ~10,000 fake people into the Person Index 
 2. Generate 5,000 fake households into Household Index
 3. Generate 500 fake CEs into CE Index
@@ -13,7 +13,7 @@ Creating synthetic data for testing clerical linkage interface
 7. Copy a random 94% from the Person Index into the Census table and remove 3% of households/CEs
 8. Copy a random 94% of the Person Index into the CCS table and remove people from 3% households while keeping the address info in CCS household/CE list ('dummy households')
 
-## Delivery 2 - pertubation - done
+## Delivery 2 - pertubation 
 1. For records that appear in both census and CCS perturb on either record:
     1) 35% of forename variables
     2) 32% of surname variables
@@ -26,13 +26,13 @@ Creating synthetic data for testing clerical linkage interface
 3. 2% of people duplicated between 2 and 5 times in the same household (with a different person ID) and 5% to different households. Each instance should have a separate person ID
 
 
-## Delivery 3 - relationships - done
+## Delivery 3 - relationships 
 
 1. Set a relationship status for each of the assigned people in a census household. Note that a resident can only have a relationship status if in a household not if in a CE.
 
-## Delivery 4 - visitors - todo
+## Delivery 4 - visitors 
 
-1. Add 200 Visitors records and link them randomly to the census households and make some of the census visitors (say 50) person records in CCS.
-2. Add 200 Visitors records and link them randomly to the CCS households and make some of the CCS visitor records (say 50) person records in Census.
+1. Add 200 Visitors records and link them randomly to the census households. (todo - make some of the census visitors (say 50) person records in CCS)
+2. Add 200 Visitors records and link them randomly to the CCS households. (todo - make some of the CCS visitor records (say 50) person records in Census)
 
 ## Delivery 5 - cluster numbers
