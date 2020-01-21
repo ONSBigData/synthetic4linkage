@@ -2,6 +2,7 @@ import pandas as pd
 from delivery1 import *
 from delivery2 import *
 from delivery3 import *
+from delivery4 import *
 
 code_list = pd.read_csv('../data/possible_codes.csv')
 
@@ -83,13 +84,22 @@ census_relationships = generate_relationships(census_people)
 
 
 #####
+# Create visitor tables
+#####
+
+census_visitor = create_census_visitor(code_list, house_num = census_house['Household_ID'].__array__(), num=200)
+ccs_visitor = create_ccs_visitor(code_list, house_num = ccs_house['Household_ID'].__array__(), num=200)
+
+#####
 # Save files
 #####
 
-census_people.sort_values('Cluster_num').to_csv('../output/census_residents.csv', index = False)
-census_house.to_csv('../output/census_households.csv', index = False)
-census_ce.to_csv('../output/census_ce.csv', index = False)
-census_relationships.to_csv('../output/census_relationships.csv', index = False)
-ccs_people.sort_values('Cluster_num').to_csv('../output/ccs_residents.csv', index = False)
-ccs_house.to_csv('../output/ccs_households.csv', index = False)
-ccs_ce.to_csv('../output/ccs_ce.csv', index = False)
+#census_people.sort_values('Cluster_num').to_csv('../output/census_residents.csv', index = False)
+#census_house.to_csv('../output/census_households.csv', index = False)
+#census_ce.to_csv('../output/census_ce.csv', index = False)
+#census_relationships.to_csv('../output/census_relationships.csv', index = False)
+census_visitor.to_csv('../output/census_visitors.csv', index = False)
+#ccs_people.sort_values('Cluster_num').to_csv('../output/ccs_residents.csv', index = False)
+#ccs_house.to_csv('../output/ccs_households.csv', index = False)
+#ccs_ce.to_csv('../output/ccs_ce.csv', index = False)
+ccs_visitor.to_csv('../output/ccs_visitors.csv', index = False)
