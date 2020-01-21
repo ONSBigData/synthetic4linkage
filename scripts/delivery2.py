@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+np.random.seed(42)
 import random
 random.seed(a=42)
 from faker import Faker
