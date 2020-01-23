@@ -1,14 +1,15 @@
 import pandas as pd
 import numpy as np
-import datetime
-
 import random
-random.seed(a=42)
-
 from faker import Faker
-#Faker.seed(42)
+
+random.seed(41)
+np.random.seed(41)
+#Faker.seed(41)  # toggle based on faker version
 fake = Faker('en_UK')
-fake.seed(42) # please toggle depending on Faker version
+fake.seed(41)
+
+import datetime
 
 #############
 # generate data row by row
@@ -20,7 +21,7 @@ def create_row_resident(code_list, num=1):
     soc_codes = code_list.iloc[:, 1].dropna()
     sic_codes = code_list.iloc[:, 2].dropna()
     oa_codes = code_list.iloc[:,3].dropna()
-    output = [{"Resident_ID": str(random.randint(10**18, ((10**19)-1))),
+    output = [{"Resident_ID": str(random.randint(10**18, 2**63-1)),
               'Household_ID': None,
               'CE_ID': None,
               'First_Name': fake.first_name(),

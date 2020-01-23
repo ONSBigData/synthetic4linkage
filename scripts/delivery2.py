@@ -1,12 +1,14 @@
 import pandas as pd
 import numpy as np
-np.random.seed(42)
 import random
-random.seed(a=42)
 from faker import Faker
-#Faker.seed(42)
+
+random.seed(42)
+np.random.seed(42)
+#Faker.seed(42)  # toggle based on faker version
 fake = Faker('en_UK')
 fake.seed(42)
+
 import string
 
 # overall missingness in string variables and typo prevalence
@@ -20,12 +22,13 @@ GEN_TYPO = .02
 def CCS_scramble(df_people, df_house, df_ce):
     house_dict = {x: str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_house.Household_ID}
     ce_dict = {x: str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_ce['CE_ID']}
-    df_people['Resident_ID'] = [str(x) for x in random.sample(range(10 ** 16, ((10 ** 17) - 1)), df_people.shape[0])]
-    df_people = df_people.replace({"Household_ID": house_dict})
-    df_people = df_people.replace({"CE_ID": ce_dict})
-    df_house = df_house.replace({"Household_ID": house_dict})
-    df_ce = df_ce.replace({"CE_ID": ce_dict})
-    return reformat_ccs_people(df_people), reformat_ccs_house(df_house), reformat_ccs_ce(df_ce)
+    df_people2 = df_people.copy()
+    df_people2['Resident_ID'] = [str(x) for x in random.sample(range(10 ** 18, 2**63-1), df_people2.shape[0])]
+    df_people2 = df_people2.replace({"Household_ID": house_dict})
+    df_people2 = df_people2.replace({"CE_ID": ce_dict})
+    df_house2 = df_house.copy().replace({"Household_ID": house_dict})
+    df_ce2 = df_ce.copy().replace({"CE_ID": ce_dict})
+    return reformat_ccs_people(df_people2), reformat_ccs_house(df_house2), reformat_ccs_ce(df_ce2)
 
 def reformat_ccs_people(df_people):
     df_people = df_people.drop(['1_Year_Ago_Address', '1_Year_Ago_Address_Country','1_Year_Ago_Address_OA',

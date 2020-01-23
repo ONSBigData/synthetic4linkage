@@ -1,14 +1,15 @@
 import pandas as pd
 import numpy as np
-import datetime
-
 import random
-random.seed(a=42)
-
 from faker import Faker
-#Faker.seed(42)
+
+random.seed(44)
+np.random.seed(44)
+#Faker.seed(44)  # toggle based on faker version
 fake = Faker('en_UK')
-fake.seed(42) # please toggle depending on Faker version
+fake.seed(44)
+
+import datetime
 
 #############
 # generate data row by row
@@ -18,14 +19,14 @@ fake.seed(42) # please toggle depending on Faker version
 def create_census_visitor(code_list, house_num, num=1):
     country_codes = code_list.iloc[:, 0].dropna().astype('int64')
     oa_codes = code_list.iloc[:, 3].dropna()
-    output = [{"Visitor_ID": str(random.randint(10**18, ((10**19)-1))),
+    output = [{"Visitor_ID": str(random.randint(10**18, 2**63-1)),
               'Household_ID': random.choice(house_num),
               'Visitor_First_Name': fake.first_name(),
               'Visitor_Last_Name': fake.last_name(),
               'date_time_obj': fake.date_between_dates(date_start=datetime.date(1904, 1, 1),
                                                        date_end=datetime.date(2019, 12, 31)),
               'Visitor_Sex': random.choice([1,2,-9,-7]),
-              'Visitor_Address': fake.street_address()+', '+fake.city(),
+              'Visitor_Address': fake.street_address() + ', ' + fake.city(),
               'Visitor_Address_Postcode': fake.postcode(),
               'Visitor_Address_Country': int(random.choice(country_codes)),
               'Visitor_Address_OA': random.choice(oa_codes),
@@ -36,7 +37,7 @@ def create_census_visitor(code_list, house_num, num=1):
 
 def create_ccs_visitor(code_list, house_num, num=1):
     country_codes = code_list.iloc[:, 0].dropna().astype('int64')
-    output = [{"Visitor_ID": str(random.randint(10 ** 18, ((10 ** 19) - 1))),
+    output = [{"Visitor_ID": str(random.randint(10 ** 18, 2**63-1)),
                'Household_ID': random.choice(house_num),
                'First_Name': fake.first_name(),
                'Last_Name': fake.last_name(),

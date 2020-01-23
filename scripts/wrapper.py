@@ -1,4 +1,5 @@
 import pandas as pd
+
 from delivery1 import *
 from delivery2 import *
 from delivery3 import *
@@ -10,16 +11,11 @@ code_list = pd.read_csv('../data/possible_codes.csv')
 ###
 # Resident, house and CE indices
 ###
+
 person_index_df = create_row_resident(num=30000, code_list = code_list)
 house_index_df = create_row_house(num=5000, code_list =  code_list)
 ce_index_df = create_row_CE(num=500, code_list =  code_list)
 
-
-#######
-### CHECK
-#######
-#print(person_index_df.head())
-#print(house_index_df.head())
 
 #######
 ### Put people in houses 
@@ -35,17 +31,6 @@ person_index_df['Residence_Type'] = person_index_df['Household_ID'].apply(assign
 person_index_df = common_surnames_in_house(person_index_df)
 person_index_df = common_firstnames_in_house(person_index_df)
 person_index_df = create_duplicates(person_index_df, num=50, twin=True)
-
-####
-### Join addresses 
-####
-
-#person_index_df = join_to_populate_addresses(person_index_df, house_index_df)
-
-#print(person_index_df.head())
-#print(person_index_df.tail())
-#print(person_index_df[['Household_ID','Last_Name']].head(10))
-#print(person_index_df[['Household_ID','Last_Name']].tail(10))
 
 
 #####

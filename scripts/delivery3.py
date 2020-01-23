@@ -1,7 +1,13 @@
 import pandas as pd
 import numpy as np
 import random
-random.seed(a=42)
+from faker import Faker
+
+random.seed(43)
+np.random.seed(43)
+#Faker.seed(43)  # toggle based on faker version
+fake = Faker('en_UK')
+fake.seed(43)
 
 #############
 ### creting census relationship table
