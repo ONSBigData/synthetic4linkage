@@ -19,16 +19,21 @@ GEN_TYPO = .02
 ### creating ccs records with new id's
 #############
 
-def CCS_scramble(df_people, df_house, df_ce):
-    house_dict = {x: str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_house.Household_ID}
-    ce_dict = {x: str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_ce['CE_ID']}
+def CCS_scramble(df_people, df_house, df_ce, df_que):
+    house_dict = {x: 'h' + str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_house.Household_ID}
+    ce_dict = {x: 'c' + str(random.randint(10 ** 16, ((10 ** 17) - 1))) for x in df_ce['CE_ID']}
+    qid_dict = {x: 'q' + str(random.randint(10 ** 15, ((10 ** 16) - 1))) for x in df_que['QID']}
     df_people2 = df_people.copy()
-    df_people2['Resident_ID'] = [str(x) for x in random.sample(range(10 ** 18, 2**63-1), df_people2.shape[0])]
+    df_people2['Resident_ID'] = ['c'+str(x) for x in random.sample(range(10 ** 18, 2**63-1), df_people2.shape[0])]
     df_people2 = df_people2.replace({"Household_ID": house_dict})
     df_people2 = df_people2.replace({"CE_ID": ce_dict})
+    df_people2 = df_people2.replace({"QID": qid_dict})
     df_house2 = df_house.copy().replace({"Household_ID": house_dict})
+    df_house2 = df_house2.replace({"QID": qid_dict})
     df_ce2 = df_ce.copy().replace({"CE_ID": ce_dict})
-    return reformat_ccs_people(df_people2), reformat_ccs_house(df_house2), reformat_ccs_ce(df_ce2)
+    df_ce2 = df_ce2.replace({"QID": qid_dict})
+    df_que2 = df_que.copy().replace({"QID": qid_dict})
+    return reformat_ccs_people(df_people2), reformat_ccs_house(df_house2, df_que2), df_ce2, df_que2
 
 def reformat_ccs_people(df_people):
     df_people = df_people.drop(['1_Year_Ago_Address', '1_Year_Ago_Address_Country','1_Year_Ago_Address_OA',
@@ -46,12 +51,14 @@ def reformat_ccs_people(df_people):
     return df_people
 
 
-def reformat_ccs_house(df_house):
-    df_house = df_house.drop(['From_Dummy', 'Household_OA'], axis=1)
+def reformat_ccs_house(df_house, df_quest):
     df_house = df_house.rename(columns={"Any_Relationships_CCS": "Any_Relationships",
                                         'Number_Of_Usual_Residents': 'Resident_Count'})
-    df_house['Census_Address'] = df_house['Household_Address']
-    df_house['Census_Address_Postcode'] = df_house['Household_Address_Postcode']
+    # have to retrieve address from df_quest!
+    address_dict = {df_quest.QID[x]:df_quest.Address[x]  for x in range(df_quest.shape[0])}
+    df_house['Census_Address'] = df_house['QID'].map(address_dict)
+    postcode_dict = {df_quest.QID[x]: df_quest.Address_Postcode[x] for x in range(df_quest.shape[0])}
+    df_house['Census_Address_Postcode'] = df_house['QID'].map(postcode_dict)
     df_house['Census_Address_Country'] = [random.choice( range(100, 1000))  for x in range(df_house.shape[0])]
     df_house['Census_Address_Indicator'] = random.sample(  range(0,((10**12)-1)) , df_house.shape[0])
     df_house['Resident_Count_verify'] = df_house['Resident_Count']
@@ -62,22 +69,25 @@ def reformat_ccs_house(df_house):
 
 
 def reformat_ccs_ce(df_ce):
-    df_ce = df_ce.drop('CE_UPRN', axis =1)
+#    df_ce = df_ce.drop('CE_UPRN', axis =1)
     return df_ce
 
 
-def lose_records(df_people, df_house, df_ce, prop = .06, prop2= .03, keep = False):
+def lose_records(df_people, df_house, df_ce, df_quest, prop = .06, prop2= .03, keep = False):
     subset_house = random.sample(df_house.Household_ID.tolist(), round(df_house.shape[0]*(1-prop2)))
     subset_ce = random.sample(df_ce.CE_ID.tolist(), round(df_ce.shape[0] *(1- prop2)))
-    new_people = df_people.loc[(df_people.Household_ID. isin(subset_house)) | (df_people.CE_ID.isin(subset_ce))].sample(frac = 1 - prop, replace=False, random_state=42).copy()
+    new_people = df_people.loc[(df_people.Household_ID. isin(subset_house)) | (df_people.CE_ID.isin(subset_ce))]\
+        .sample(frac = 1 - prop, replace=False, random_state=42).copy()
     if keep:
         new_house = df_house.copy()
         new_ce = df_ce.copy()
+        new_quest = df_quest.copy()
         # new_house.loc[(df_house.Household_ID.isin(subset_house)), 'From_Dummy'] = 1
     else:
         new_house = df_house.loc[df_house.Household_ID.isin(subset_house)].copy()
         new_ce = df_ce.loc[df_ce.CE_ID.isin(subset_ce)].copy()
-    return new_people, new_house, new_ce
+        new_quest = df_quest.loc[df_quest.QID.isin(new_people.QID)].copy()
+    return new_people, new_house, new_ce, new_quest
 
 
 #############
@@ -114,12 +124,16 @@ def common_firstnames_in_house(df):
 
 
 def create_duplicates(df, num=50, change_house=False, twin=False):
-    subset = df.iloc[random.sample(range(df.shape[0]), num)].copy()
-    subset['Resident_ID'] = random.sample(range(10 ** 18, ((10 ** 19) - 1)), num)
+    subset = df.iloc[random.sample(range(df.shape[0]), num)].copy().reindex()
+    subset['Resident_ID'] = ['c'+ str(x) for x in random.sample(range(10 ** 18, ((10 ** 19) - 1)), num)]
     if twin:
         subset['First_Name'] = random.sample(df.First_Name.tolist(), num)
     if change_house:
-        subset['Household_ID'] = random.sample(df.Household_ID.dropna().tolist(), num)
+        sameseed = random.randint(0, 10^12)
+        random.seed(sameseed)
+        subset['Household_ID'] = random.sample(df.Household_ID[df.Household_ID != ''].tolist(), num)
+        random.seed(sameseed)
+        subset['QID'] = random.sample(df.QID[df.Household_ID != ''].tolist(), num)
         subset['CE_ID'] = None
     return df.append(subset)
 
@@ -182,26 +196,26 @@ def add_missing_codes_to_some(ccs_people):
 def perturb_geography(ccs_house):
     #swaping houses for 50 (2%) of households
     subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[.02, 1 - .02])
-    ccs_house.loc[subset, 'Household_ID'] =  random.sample(ccs_house.loc[subset, 'Household_ID'].tolist(), sum(subset))
+    ccs_house.loc[subset, 'QID'] = random.sample(ccs_house.loc[subset, 'QID'].tolist(), sum(subset))
 
     #  adding errors
     subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[.02, 1-.02])
-    ccs_house.loc[subset,'Household_Address_Postcode'] = random.sample(ccs_house.Household_Address_Postcode.tolist(), sum(subset))
+    ccs_house.loc[subset,'Address_Postcode'] = random.sample(ccs_house.Address_Postcode.tolist(), sum(subset))
     subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[.02, 1 - .02])
-    ccs_house.loc[subset, 'Household_Address'] = random.sample(ccs_house.Household_Address.tolist(),sum(subset))
+    ccs_house.loc[subset, 'Address'] = random.sample(ccs_house.Address.tolist(),sum(subset))
 
     return ccs_house
 
 def add_missing_codes_to_address(ccs_house):
     #introduce missingness and typos on both sides
     subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_TYPO, 1-GEN_TYPO])
-    ccs_house.loc[subset,'Household_Address_Postcode'] = ccs_house.loc[subset,'Household_Address_Postcode'].transform(simple_typos)
+    ccs_house.loc[subset,'Address_Postcode'] = ccs_house.loc[subset,'Address_Postcode'].transform(simple_typos)
     subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_MISS, 1-GEN_MISS])
-    ccs_house.loc[subset,'Household_Address_Postcode'] = -9
+    ccs_house.loc[subset,'Address_Postcode'] = -9
 
     subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_TYPO, 1 - GEN_TYPO])
-    ccs_house.loc[subset, 'Household_Address'] = ccs_house.loc[subset, 'Household_Address'].transform(simple_typos)
+    ccs_house.loc[subset, 'Address'] = ccs_house.loc[subset, 'Address'].transform(simple_typos)
     subset = np.random.choice([True, False], size=ccs_house.shape[0], p=[GEN_MISS, 1 - GEN_MISS])
-    ccs_house.loc[subset, 'Household_Address'] = -9
+    ccs_house.loc[subset, 'Address'] = -9
 
     return ccs_house

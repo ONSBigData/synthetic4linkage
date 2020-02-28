@@ -15,6 +15,7 @@ code_list = pd.read_csv('../data/possible_codes.csv')
 person_index_df = create_row_resident(num=30000, code_list = code_list)
 house_index_df = create_row_house(num=5000, code_list =  code_list)
 ce_index_df = create_row_CE(num=500, code_list =  code_list)
+quest_df = create_row_questionnaire(code_list, house_index_df.QID.tolist() + ce_index_df.QID.tolist())
 
 
 #######
@@ -37,8 +38,12 @@ person_index_df = create_duplicates(person_index_df, num=50, twin=True)
 # duplicate for CCS with modified ID's
 #####
 
-ccs_people, ccs_house, ccs_ce = lose_records(*CCS_scramble(person_index_df, house_index_df, ce_index_df), keep=True)
-census_people, census_house, census_ce = lose_records(person_index_df, house_index_df, ce_index_df, keep=False)
+ccs_people, ccs_house, ccs_ce, ccs_quest = lose_records(*CCS_scramble(person_index_df, house_index_df, ce_index_df, quest_df), keep=True)
+census_people, census_house, census_ce, census_quest = lose_records(person_index_df, house_index_df, ce_index_df, quest_df, keep=False)
+
+# add passports to census people
+
+census_people =  add_passport(census_people)
 
 #####
 #create duplicated people
@@ -57,8 +62,8 @@ census_people = create_duplicates(create_duplicates(census_people, num= round(ce
 
 ccs_people = add_missing_codes_to_some(pertubation21(ccs_people))
 census_people = add_missing_codes_to_some(census_people)
-ccs_house = add_missing_codes_to_address(perturb_geography(ccs_house))
-census_house = add_missing_codes_to_address(census_house)
+ccs_quest = add_missing_codes_to_address(perturb_geography(ccs_quest))
+census_quest = add_missing_codes_to_address(census_quest)
 
 
 #####
@@ -72,8 +77,8 @@ census_relationships = generate_relationships(census_people)
 # Create visitor tables
 #####
 
-census_visitor = create_census_visitor(code_list, house_num = census_house.Household_ID.__array__(), num=200)
-ccs_visitor = create_ccs_visitor(code_list, house_num = ccs_house.Household_ID.__array__(), num=200)
+census_visitor = create_census_visitor(code_list, census_house, num=200)
+ccs_visitor = create_ccs_visitor(code_list, ccs_house, num=200)
 
 #####
 # Save files
@@ -84,7 +89,9 @@ census_house.to_csv('../output2/census_households.csv', index = False)
 census_ce.to_csv('../output2/census_ce.csv', index = False)
 census_relationships.to_csv('../output2/census_relationships.csv', index = False)
 census_visitor.to_csv('../output2/census_visitors.csv', index = False)
+census_quest.to_csv('../output2/census_questionnaires.csv', index = False)
 ccs_people.sort_values('Cluster_num').to_csv('../output2/ccs_residents.csv', index = False)
 ccs_house.to_csv('../output2/ccs_households.csv', index = False)
 ccs_ce.to_csv('../output2/ccs_ce.csv', index = False)
 ccs_visitor.to_csv('../output2/ccs_visitors.csv', index = False)
+ccs_quest.to_csv('../output2/ccs_questionnaires.csv', index = False)

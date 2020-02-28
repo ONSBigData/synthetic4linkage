@@ -21,9 +21,10 @@ def create_row_resident(code_list, num=1):
     soc_codes = code_list.iloc[:, 1].dropna()
     sic_codes = code_list.iloc[:, 2].dropna()
     oa_codes = code_list.iloc[:,3].dropna()
-    output = [{"Resident_ID": str(random.randint(10**18, 2**63-1)),
+    output = [{"Resident_ID": 'c'+str(random.randint(10**18, 2**63-1)),
               'Household_ID': None,
               'CE_ID': None,
+              'QID' : None,
               'First_Name': fake.first_name(),
               'Middle_Name': '-9' if random.random() < .5 else fake.first_name(),
               'Last_Name': fake.last_name(),
@@ -66,14 +67,10 @@ def create_row_resident(code_list, num=1):
     output2['Cluster_num'] = range(num)
     return output2
 
-
 def create_row_house(code_list, num=1):
   oa_codes = code_list.iloc[:, 3].dropna()
-  output = [{'Household_ID': str(random.randint(10**16, ((10**17)-1))),
-              'Household_Address': fake.street_address()+', '+fake.city(),
-              'Household_Address_Postcode': fake.postcode(),
-              'Household_OA': random.choice(oa_codes),
-              'Household_UPRN': str(random.randint(0,((10**12)-1))),
+  output = [{'Household_ID': 'h' + str(random.randint(10**16, ((10**17)-1))),
+              'QID': 'q' + str(random.randint(10**15, ((10**16)-1))),
               'Accomodation_Type':random.choice([1, 2, 3, 4, 5, 6, 7, -9, -7, -3]),
               'Number_Of_Usual_Residents':random.choice([1,1,1,2,2,2,2,2,3,4,5]),
               'Ownership_Type':random.choice([1, 2, 3, 4, 5, -9, -7]),
@@ -83,15 +80,23 @@ def create_row_house(code_list, num=1):
 
 def create_row_CE(code_list, num=1):
   oa_codes = code_list.iloc[:, 3].dropna()
-  output = [{'CE_ID': str(random.randint(10**16, ((10**17)-1))),
-              'CE_Address': fake.street_address()+', '+fake.city(),
-              'CE_Address_Postcode': fake.postcode(),
-              'CE_OA': random.choice(oa_codes),
-              'CE_UPRN': str(random.randint(0,((10**12)-1))),
+  output = [{'CE_ID': 'e' + str(random.randint(10**16, ((10**17)-1))),
+              'QID': 'q' + str(random.randint(10**15, ((10**16)-1))),
               'Nature_Of_Establishment': random.choice(list(range(1,23))+[-9, -7]),
               'Number_Of_Residents': random.randint(6,49)} for x in range(num)]
   return pd.DataFrame(output)
 
+
+def create_row_questionnaire(code_list, QIDs=None):
+  num = len(QIDs)
+  oa_codes = code_list.iloc[:, 3].dropna()
+  output = pd.DataFrame( [{'Address':fake.street_address()+'\n'+fake.city(),
+              'Address_Postcode': fake.postcode(),
+              'Output_Area': random.choice(oa_codes),
+              'UPRN': str(random.randint(0,((10**12)-1)))} for x in range(num)])
+  output['Address_Raw'] = output['Address'] + '\n' + output['Address_Postcode']
+  output['QID'] = QIDs
+  return output
 
 ############
 # date of birth from object
@@ -126,46 +131,33 @@ def split_DOB(person_index_df):
 # is less than or equal to the number of residents
 
 
-def generate_list_of_repeated_house_ids(df, id_column_name = 'Household_ID', num_column_name = 'Number_Of_Usual_Residents'):
+def generate_list_of_repeated_house_rows(df, num_column_name = 'Number_Of_Usual_Residents'):
   # first create a giant list where every house id 
-  list_of_ids_repeated = []
-  for house_id, no_residents in zip(df[id_column_name],df[num_column_name]): 
-    id_repeated = [house_id for i in range(no_residents)]
-    list_of_ids_repeated = list_of_ids_repeated + id_repeated
+  list_of_ids_repeated = [ row_num  for row_num in range(df.shape[0]) for i in range(df[num_column_name][row_num])]
   return list_of_ids_repeated
 
 
 def generate_house_for_person(person_index_df, house_index_df, ce_index_df):
   # generate list of all house ids to use
-  list_of_ids_repeated = generate_list_of_repeated_house_ids(house_index_df)
-  # total number of house ids to be assigned
-  length_of_list_of_items_repeated = len(list_of_ids_repeated)
-  # total number of items we need in any one column
-  number_of_items = person_index_df.shape[0]
+  list_of_rows_repeated = generate_list_of_repeated_house_rows(house_index_df)
   # the nans we need to tag on the end to fill the column
-  ## Now we want to nan a small percentage of values randomly so they can live in CEs
-  how_many_nans_do_we_need = number_of_items - length_of_list_of_items_repeated
-  #prop = int(shorter_list_of_ids_repeated * 0.2)
-  list_of_nans = ['' for x in range(how_many_nans_do_we_need)]
-  # all house id column values 
-  list_of_ids_repeated_correct_length = list_of_ids_repeated + list_of_nans
+  num_nans_needed = person_index_df.shape[0] - len(list_of_rows_repeated)
   # put it in the df 
-  person_index_df['Household_ID'] = list_of_ids_repeated_correct_length
+  person_index_df['Household_ID'] = [x for x in house_index_df['Household_ID'][list_of_rows_repeated]]+['' for x in range(num_nans_needed)]
   ##########
   ### CE_ID column
   ##########
   # STEP 1: Generate list of nans same length as list of house ids
-  first_ce_nans = ['' for x in range(length_of_list_of_items_repeated)]
+  first_ce_nans = ['' for x in range(len(list_of_rows_repeated))]
   # STEP 2: Generate long list of repeated CE ids
-  list_of_ce_ids_repeated = generate_list_of_repeated_house_ids(ce_index_df, id_column_name = 'CE_ID', num_column_name = 'Number_Of_Residents')
-  length_of_list_of_ce_ids_repeated = len(list_of_ce_ids_repeated)
+  list_of_ces_repeated = generate_list_of_repeated_house_rows(ce_index_df, num_column_name = 'Number_Of_Residents')
   # STEP 3: find number of extra nans needed to fill the column
-  how_many_nans_for_last_ce = number_of_items - (length_of_list_of_items_repeated+length_of_list_of_ce_ids_repeated)
-  last_ce_nans = ['' for x in range(how_many_nans_for_last_ce)]
+  last_ce_nans = ['' for x in range(person_index_df.shape[0] - len(list_of_rows_repeated) -len(list_of_ces_repeated))]
   # STEP 4: Put all the list together
-  ce_id_list = first_ce_nans + list_of_ce_ids_repeated + last_ce_nans
-  person_index_df['CE_ID'] = ce_id_list
-  person_index_df = person_index_df.dropna(how = 'all', subset = ['Household_ID','CE_ID'])
+  person_index_df['CE_ID'] = first_ce_nans + [x for x in ce_index_df['CE_ID'][list_of_ces_repeated]] + last_ce_nans
+  person_index_df['QID'] = [x for x in house_index_df['QID'][list_of_rows_repeated]] + \
+                           [x for x in ce_index_df['QID'][list_of_ces_repeated]] + last_ce_nans
+  person_index_df = person_index_df.dropna(subset = ['QID'])
   return person_index_df
 
 ###
