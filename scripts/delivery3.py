@@ -33,9 +33,10 @@ def generate_relationships(census_table):
 
 def add_passport(census_table, passport_file = '../data/other_passport.csv'):
     code_passport = pd.read_csv(passport_file, header = None, dtype = {0 : str})[0]
-    output = pd.DataFrame([{'Passport': random.choice(['-7', '-9', '1000', '1100', '1010', '0100', '0110', '0010', '0001']),
-               'Other_Passport_Held': random.choice(['-7', '-9', random.choice(code_passport)])}  for x in  range(census_table.shape[0])])
-    output.loc[output.Passport.isin(['-7', '-9']), 'Other_Passport_Held'] = '-9'
+    output = pd.DataFrame([{'Passport': random.choice(['-7', '-9', '1000', '1100', '1010', '1110', '0100', '0110', '0010', '0001']),
+               'Other_Passport_Held': random.choice(['-7', '-9'])}  for x in  range(census_table.shape[0])])
+    output.loc[output.Passport.isin(['1010', '1110', '0110', '0010']), 'Other_Passport_Held'] =\
+        [random.choice(['-7', '-9']+ code_passport.tolist()) for x in range(sum(output.Passport.isin(['1010', '1110', '0110', '0010'])))]
     census_table['Passport'] = output.Passport
     census_table['Other_Passport_Held'] = output.Other_Passport_Held
     return census_table
