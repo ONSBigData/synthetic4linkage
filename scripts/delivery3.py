@@ -49,9 +49,11 @@ def assign_census_address_var(house_id):
 
 def add_ccs_house_type(ccs_table):
     output = pd.DataFrame([{'Census_Address_Accommodation_Type': random.choice([1, 2, 3, 4, 5, 6, 7, -9, -7]),
-        'Census_Address_Ownership_Type': random.choice([1, 2, 3, 4, 5, -9, -7])}  for x in  range(ccs_table.shape[0])])
+        'Census_Address_Ownership_Type': random.choice([1, 2, 3, 4, 5, -9, -7]),
+        'Any_Relationship': random.choice([1, 2, -9,])}  for x in  range(ccs_table.shape[0])])
     ccs_table['Census_Address_Accommodation_Type'] = output.Census_Address_Accommodation_Type
     ccs_table['Census_Address_Ownership_Type'] = output.Census_Address_Ownership_Type
+    ccs_table['Any_Relationship'] = output.Any_Relationship
     subset = np.random.choice([True, False], size=ccs_table.shape[0], p=[.10, 1 - .10])
 
     ccs_table.loc[subset, 'Accommodation_Type'] =  -9
@@ -66,5 +68,7 @@ def add_ccs_house_type(ccs_table):
     ccs_table.loc[~subset, 'Census_Address_Count_Verify'] = -9
     ccs_table.loc[~subset, 'Census_Address_Ownership_Type'] = -9
     ccs_table.loc[~subset, 'Census_Address_Accommodation_Type'] = -9
+
+    ccs_table = ccs_table.drop('From_Dummy', axis = 1)
 
     return ccs_table
