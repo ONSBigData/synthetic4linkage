@@ -75,7 +75,7 @@ def create_row_house(code_list, num=1):
               'Number_Of_Residents':random.choice([1,1,1,2,2,2,2,2,3,4,5]),
               'Ownership_Type':random.choice([1, 2, 3, 4, 5, -9, -7]),
               'From_Dummy': 0,
-              'Any_Relationships_CCS':None} for x in range(num)]
+              'Any_Relationship_CCS':None} for x in range(num)]
   return pd.DataFrame(output)
 
 def create_row_CE(code_list, num=1):

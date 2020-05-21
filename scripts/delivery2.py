@@ -52,7 +52,7 @@ def reformat_ccs_people(df_people):
 
 
 def reformat_ccs_house(df_house, df_quest):
-    df_house = df_house.rename(columns={"Any_Relationships_CCS": "Any_Relationships",
+    df_house = df_house.rename(columns={"Any_Relationship_CCS": "Any_Relationship",
                                         'Number_Of_Residents': 'Resident_Count'})
     # have to retrieve address from df_quest!
     address_dict = {df_quest.QID[x]:df_quest.Address[x]  for x in range(df_quest.shape[0])}
