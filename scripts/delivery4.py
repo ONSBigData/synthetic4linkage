@@ -5,9 +5,9 @@ from faker import Faker
 
 random.seed(44)
 np.random.seed(44)
-#Faker.seed(44)  # toggle based on faker version
+Faker.seed(44)  # toggle based on faker version
 fake = Faker('en_UK')
-fake.seed(44)
+#fake.seed(44)
 
 import datetime
 

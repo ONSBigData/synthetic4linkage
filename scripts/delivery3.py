@@ -5,9 +5,9 @@ from faker import Faker
 
 random.seed(43)
 np.random.seed(43)
-#Faker.seed(43)  # toggle based on faker version
+Faker.seed(43)  # toggle based on faker version
 fake = Faker('en_UK')
-fake.seed(43)
+#fake.seed(43)
 
 #############
 ### creting census relationship table
@@ -31,7 +31,7 @@ def generate_relationships(census_table):
     return output
 
 
-def add_passport(census_table, passport_file = '../data/other_passport.csv'):
+def add_passport(census_table, passport_file = 'data/other_passport.csv'):
     code_passport = pd.read_csv(passport_file, header = None, dtype = {0 : str})[0]
     output = pd.DataFrame([{'Passport': random.choice(['-7', '-9', '1000', '1000', '1000', '1100', '1010', '1110', '0100', '0110', '0010', '0001']),
                'Other_Passport_Held': random.choice(['-7', '-9'])}  for x in  range(census_table.shape[0])])
@@ -40,3 +40,31 @@ def add_passport(census_table, passport_file = '../data/other_passport.csv'):
     census_table['Passport'] = output.Passport
     census_table['Other_Passport_Held'] = output.Other_Passport_Held
     return census_table
+
+def assign_census_address_var(house_id):
+  if (house_id == ''):
+    residence_type = 2
+  else: residence_type =  1
+  return residence_type
+
+def add_ccs_house_type(ccs_table):
+    output = pd.DataFrame([{'Census_Address_Accommodation_Type': random.choice([1, 2, 3, 4, 5, 6, 7, -9, -7]),
+        'Census_Address_Ownership_Type': random.choice([1, 2, 3, 4, 5, -9, -7])}  for x in  range(ccs_table.shape[0])])
+    ccs_table['Census_Address_Accommodation_Type'] = output.Census_Address_Accommodation_Type
+    ccs_table['Census_Address_Ownership_Type'] = output.Census_Address_Ownership_Type
+    subset = np.random.choice([True, False], size=ccs_table.shape[0], p=[.10, 1 - .10])
+
+    ccs_table.loc[subset, 'Accommodation_Type'] =  -9
+    ccs_table.loc[subset, 'Ownership_Type'] = -9
+    ccs_table.loc[~subset, 'Census_Address'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Postcode'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Country'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Indicator'] = -9
+    ccs_table.loc[~subset, 'Census_Address_UPRN'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Output_Area'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Count'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Count_Verify'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Ownership_Type'] = -9
+    ccs_table.loc[~subset, 'Census_Address_Accommodation_Type'] = -9
+
+    return ccs_table

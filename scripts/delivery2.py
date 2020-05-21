@@ -5,9 +5,9 @@ from faker import Faker
 
 random.seed(42)
 np.random.seed(42)
-#Faker.seed(42)  # toggle based on faker version
+Faker.seed(42)  # toggle based on faker version
 fake = Faker('en_UK')
-fake.seed(42)
+#fake.seed(42)
 
 import string
 
@@ -53,17 +53,22 @@ def reformat_ccs_people(df_people):
 
 def reformat_ccs_house(df_house, df_quest):
     df_house = df_house.rename(columns={"Any_Relationships_CCS": "Any_Relationships",
-                                        'Number_Of_Usual_Residents': 'Resident_Count'})
+                                        'Number_Of_Residents': 'Resident_Count'})
     # have to retrieve address from df_quest!
     address_dict = {df_quest.QID[x]:df_quest.Address[x]  for x in range(df_quest.shape[0])}
     df_house['Census_Address'] = df_house['QID'].map(address_dict)
     postcode_dict = {df_quest.QID[x]: df_quest.Address_Postcode[x] for x in range(df_quest.shape[0])}
     df_house['Census_Address_Postcode'] = df_house['QID'].map(postcode_dict)
+    uprn_dict = {df_quest.QID[x]:df_quest.UPRN[x]  for x in range(df_quest.shape[0])}
+    df_house['Census_Address_UPRN'] = df_house['QID'].map(uprn_dict)
+    area_dict = {df_quest.QID[x]: df_quest.Output_Area[x] for x in range(df_quest.shape[0])}
+    df_house['Census_Address_Output_Area'] = df_house['QID'].map(area_dict)
+
     df_house['Census_Address_Country'] = [random.choice( range(100, 1000))  for x in range(df_house.shape[0])]
     df_house['Census_Address_Indicator'] = random.sample(  range(0,((10**12)-1)) , df_house.shape[0])
-    df_house['Resident_Count_verify'] = df_house['Resident_Count']
-    df_house['Other_Address_Count'] = [random.choice(range(0,99)) for x in range(df_house.shape[0])]
-    df_house['Other_Address_Count_verify'] = df_house['Other_Address_Count']
+    df_house['Resident_Count_Verify'] = df_house['Resident_Count']
+    df_house['Census_Address_Count'] = [random.choice(range(0,99)) for x in range(df_house.shape[0])]
+    df_house['Census_Address_Count_Verify'] = df_house['Census_Address_Count']
     df_house['Ownership_Type'] = [random.choice([1,2,3,4,5,-7,-9]) for x in  range(df_house.shape[0])]
     return df_house
 

@@ -5,9 +5,9 @@ from faker import Faker
 
 random.seed(41)
 np.random.seed(41)
-#Faker.seed(41)  # toggle based on faker version
+Faker.seed(41)  # toggle based on faker version
 fake = Faker('en_UK')
-fake.seed(41)
+#fake.seed(41)
 
 import datetime
 
@@ -71,8 +71,8 @@ def create_row_house(code_list, num=1):
   oa_codes = code_list.iloc[:, 3].dropna()
   output = [{'Household_ID': 'h' + str(random.randint(10**16, ((10**17)-1))),
               'QID': 'q' + str(random.randint(10**15, ((10**16)-1))),
-              'Accomodation_Type':random.choice([1, 2, 3, 4, 5, 6, 7, -9, -7, -3]),
-              'Number_Of_Usual_Residents':random.choice([1,1,1,2,2,2,2,2,3,4,5]),
+              'Accommodation_Type':random.choice([1, 2, 3, 4, 5, 6, 7, -9, -7, -3]),
+              'Number_Of_Residents':random.choice([1,1,1,2,2,2,2,2,3,4,5]),
               'Ownership_Type':random.choice([1, 2, 3, 4, 5, -9, -7]),
               'From_Dummy': 0,
               'Any_Relationships_CCS':None} for x in range(num)]
@@ -131,7 +131,7 @@ def split_DOB(person_index_df):
 # is less than or equal to the number of residents
 
 
-def generate_list_of_repeated_house_rows(df, num_column_name = 'Number_Of_Usual_Residents'):
+def generate_list_of_repeated_house_rows(df, num_column_name = 'Number_Of_Residents'):
   # first create a giant list where every house id 
   list_of_ids_repeated = [ row_num  for row_num in range(df.shape[0]) for i in range(df[num_column_name][row_num])]
   return list_of_ids_repeated
@@ -181,7 +181,6 @@ def join_to_populate_addresses(df_people, df_houses):
   rename_dict = {'Household_Address': "Address", 
                   'Household_Address_Postcode': "Address_Postcode",
                   'Household_OA': "OA", 
-                  'Household_UPRN': "UPRN",
-                  'Number_Of_Usual_Residents': "Number_Of_Residents"}
+                  'Household_UPRN': "UPRN"}
   df_people.rename(rename_dict)
   return df_people
